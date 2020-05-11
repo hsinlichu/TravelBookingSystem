@@ -1249,15 +1249,14 @@ h3 {
   z-index: 9;
   background: #FF4A52;
   width: 100px;
-  right: 85px;
+  right: 100px;
 }
 
 @media (max-width: 767px) {
   /* line 324, ../../Arafath/CL/December/231. Travel-02/HTML/scss/_header.scss */
   .header-area .seach_icon {
     width: 50px;
-    right: 60px;
-    right: 85px;
+    right: 50px;
   }
 }
 
@@ -1265,7 +1264,7 @@ h3 {
   /* line 324, ../../Arafath/CL/December/231. Travel-02/HTML/scss/_header.scss */
   .header-area .seach_icon {
     width: 100px;
-    right: 85px;
+    right: 100px;
   }
 }
 
@@ -1273,7 +1272,7 @@ h3 {
   /* line 324, ../../Arafath/CL/December/231. Travel-02/HTML/scss/_header.scss */
   .header-area .seach_icon {
     width: 80px;
-    right: 85px;
+    right: 80px;
   }
 }
 
