@@ -11,3 +11,6 @@ HELP.md
 .factorypath
 
 .sts4-cache
+
+### Customized ###
+.DS_Store

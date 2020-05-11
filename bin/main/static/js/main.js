@@ -1,5 +1,6 @@
 (function ($) {
 "use strict";
+/*
 // TOP Menu Sticky
 $(window).on('scroll', function () {
 	var scroll = $(window).scrollTop();
@@ -11,6 +12,7 @@ $(window).on('scroll', function () {
     $('#back-top').fadeIn(500);
 	}
 });
+*/
 
 
 
@@ -317,9 +319,6 @@ function mailChimp() {
   $('#mc_embed_signup').find('form').ajaxChimp();
 }
 mailChimp();
-
-
-
         // Search Toggle
         $("#search_input_box").hide();
         $("#search").on("click", function () {
@@ -340,12 +339,4 @@ mailChimp();
         });
 
         // prise slider 
-        
-
-
-
-
-
-
-
 })(jQuery);	
