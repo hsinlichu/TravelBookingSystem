@@ -3,5 +3,5 @@ import travel.booking.database.*;
 
 public class Global {
 	//public static Database db;
-
+	
 }
