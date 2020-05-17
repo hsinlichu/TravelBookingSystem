@@ -1,31 +1,20 @@
 package travel.booking.container;
 
-public class Account {
-	public int id;
+import java.io.Serializable;
+
+import com.google.gson.annotations.SerializedName;
+
+public class Account extends Container implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@SerializedName("account_id")
+	public String id;
+	@SerializedName("email")
 	public String email;
+	@SerializedName("name")
 	public String name;
 
-	public Account(){
-		//Default constructor
-		this.id = 0;
-		this.email = "";
-		this.name = "";
-	}
-	
 
-	public Account(int id, String email, String name){
-		// Parameter constructor
-		this.id = id;
-		this.email = email;
-		this.name = name;
-	}
-
-	@Override 
-	public String toString() {
-		// return String representation of the class
-        return "-----Account-----\n" + 
-        	   "id: " + this.id + "\n" + 
-        	   "email: " + this.email + "\n" + 
-        	   "name: " +  this.name + "\n";
-    }
 }

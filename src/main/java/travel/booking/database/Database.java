@@ -279,6 +279,46 @@ public class Database {
 			return null;
 		}
 	}
+	
+	protected List<HashMap<String, String>> selectContains(String table,  HashMap<String, String> attr) {
+		//String sql = "INSERT INTO JsonHotel (star, locality, street_address) VALUES (1, 'Taipei', 'abc street');";
+		String conditions = "";
+		for(String key: attr.keySet()){
+			String value = attr.get(key);
+			conditions += key + " LIKE " + "'" + value + "%'" + " and ";
+		}
+		conditions = conditions.substring(0, conditions.length()-5);
+
+		String sql = "SELECT * FROM " + "`" + table + "`" + " WHERE " + conditions + ";" ;
+		//System.out.println(sql);
+		//String sql = "INSERT INTO " + table + " (star, locality, street_address) " + " VALUES " + "(1, 'Taipei', 'abc street');";
+
+		try(Connection conn = this.connect()) {
+			Statement stmt = conn.createStatement();
+			// pstmt.executeUpdate();
+			ResultSet rs = stmt.executeQuery(sql); 
+            
+            List<HashMap<String, String>> results = new ArrayList<HashMap<String, String>>();
+            // loop through the result set
+            while (rs.next()) {
+            	ResultSetMetaData rsmd = rs.getMetaData();
+            	int n_column = rsmd.getColumnCount();
+            	HashMap<String, String> result = new HashMap<>();
+            	for (int i = 1; i <= n_column; i++) 
+            		result.put(rsmd.getColumnName(i), rs.getString(i));
+            	results.add(result);
+            	//System.out.println(rs.getString(1) + rs.getString(2) + rs.getString(3));
+                // System.out.println(rs.getInt("id") +  "\t" + 
+                //                    rs.getString("name") + "\t" +
+                //                    rs.getDouble("capacity"));
+            }
+            conn.close();
+            return results;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
 
 	protected List<HashMap<String, String>> selectAll(String table){
 		HashMap<String, String> attr = new HashMap<>();
