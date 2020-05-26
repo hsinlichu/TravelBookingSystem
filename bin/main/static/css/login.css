@@ -4,11 +4,11 @@
 
 #loginModal a {
   text-decoration: none;
-  color: #ffba5a;
+  color: #1EC6B6;
   transition: .5s ease;
 }
 #loginModal a:hover {
-  color: #ffaa34;
+  color: #FF4A52;
 }
 
 #loginModal .form {
@@ -43,11 +43,11 @@
   transition: .5s ease;
 }
 #loginModal .tab-group li a:hover {
-  background: #ffaa34;
+  background: #FF4A52;
   color: #ffffff;
 }
 #loginModal .tab-group .active a {
-  background: #ffba5a;
+  background: #1EC6B6;
   color: #ffffff;
 }
 
@@ -75,7 +75,7 @@
 }
 #loginModal label .req {
   margin: 2px;
-  color: #ffba5a;
+  color: #1EC6B6;
 }
 
 #loginModal label.active {
@@ -107,7 +107,7 @@
 }
 #loginModal input:focus, textarea:focus {
   outline: 0;
-  border-color: #ffba5a;
+  border-color: #1EC6B6;
 }
 
 #loginModal textarea {
@@ -142,13 +142,13 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .1em;
-  background: #ffba5a;
+  background: #1EC6B6;
   color: #ffffff;
   transition: all 0.5s ease;
   -webkit-appearance: none;
 }
 #loginModal .button:hover, .button:focus {
-  background: #ffaa34;
+  background: #FF4A52;
 }
 
 #loginModal .button-block {
