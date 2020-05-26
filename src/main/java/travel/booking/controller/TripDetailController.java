@@ -13,21 +13,21 @@ import travel.booking.Global;
 import travel.booking.container.*;
 
 @Controller
-public class HotelDetailController {  
+public class TripDetailController {  
 	@Resource(name = "loginInfoSession")
 	LoginInfo loginInfo;
 	
-	@RequestMapping(value={"rooms.html", "rooms"}, method=RequestMethod.GET, params = {"id"})
-    public String getDetailHotel(@RequestParam int id, Model model) {
-		System.out.println("getDetailHotel: " + loginInfo.search_datein+" "+loginInfo.search_dateout+" "+loginInfo.search_location+" "+loginInfo.search_person+" "+loginInfo.datedifference);
+	@RequestMapping(value={"trip.html", "trip"}, method=RequestMethod.GET, params = {"id"})
+    public String getDetailHotel(@RequestParam String id, Model model) {
+		System.out.println("getDetailTrip: " + loginInfo.departure_date+" "+loginInfo.search_location);
     	System.out.println("rooms.html id: " + id);
-    	loginInfo.select_hotel_id = id;
+    	loginInfo.select_trip_id = id;
     	/*
     	Hotel result = Global.db.getHotel(id); 
     	model.addAttribute("hotelInfo", result);
     	System.out.println(result);
     	model.addAttribute("loginInfo", loginInfo);
     	*/
-        return "rooms";                        
+        return "trip";                        
     }
 }

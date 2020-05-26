@@ -10,12 +10,10 @@ import org.springframework.context.annotation.Configuration;
 public class LoginInfo {
 	public boolean islogin = false;
 	public Account account;
-	public String search_datein;
-	public String search_dateout;
+	public String departure_date;
 	public String search_location;
 	public int search_person;
-	public int select_hotel_id;
-	public long datedifference;
+	public String select_trip_id;
 	
 	@Bean
 	@SessionScope
