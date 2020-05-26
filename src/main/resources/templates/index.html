@@ -156,14 +156,10 @@
 					<div class="search_wrap">
 						<form class="search_form" action="/result" method="post">
 							<div class="input_field" style="width: 50%">
-								<select id="location" name="location">
-									<option data-display="Destination"></option>
-									<option value="1">北海道．札幌．小樽．函館．旭川</option>
-									<option value="2">關西．大阪．京都．神戶．奈良</option>
-								</select>
+                                <input type="text" placeholder="Travel destination" id="location" name="location" required>
 							</div>
 							<div class="input_field">
-								<input id="datepicker" name="departure_date"  placeholder="Departre date">
+								<input id="datepicker" name="departure_date"  placeholder="Departre date" required>
 							</div>
 							<div class="search_btn">
 								<button class="boxed-btn4 " type="submit">Search</button>
