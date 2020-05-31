@@ -18,67 +18,44 @@ import travel.booking.container.*;
 @Controller
 public class InfoCheckController {     
 	@Resource(name = "loginInfoSession")
-	LoginInfo loginInfo;
-	List<Order> order;
-	/*
+	private LoginInfo loginInfo;
+	private int numofpeople;
+	
 	@RequestMapping(value="/confirmation", method=RequestMethod.POST)
-    public String infoCheck(@RequestParam int numofpeople) {
-		System.out.println("Confirmation: " + loginInfo.search_datein+" "+loginInfo.search_dateout+" "+loginInfo.search_location+" "+loginInfo.search_person);
-		System.out.println("Select hotel id:" + loginInfo.select_hotel_id);
+    public String infoCheck(@RequestParam int numofpeople, Model model) {
+		System.out.println("Confirmation: " + loginInfo.select_trip_id);
 		
-		Hotel selecthotel = Global.db.getHotel(loginInfo.select_hotel_id); 
-		
-		order = bookCheck(selecthotel, loginInfo.search_datein, loginInfo.search_dateout, numofSingle, numofDouble, numofQuad);
-		if( order == null)
-			return "index?msg=6"; //     alert("Selected hotel is unavailable now, please try again!");
-		else {
-			model.addAttribute("selecthotel", selecthotel);
-			model.addAttribute("numofSingle", numofSingle);
-			model.addAttribute("numofDouble", numofDouble);
-			model.addAttribute("numofQuad", numofQuad);
-			model.addAttribute("staydays", staydays);
-			model.addAttribute("totalprice", totalprice);
-			model.addAttribute("singledayprice", singledayprice);
-	    	model.addAttribute("loginInfo", loginInfo);
+		//Trip selectTrip = Global.db.getHotel(loginInfo.select_hotel_id); 
+		Trip selectTrip = new Trip();
+		this.numofpeople = numofpeople;
+		model.addAttribute("loginInfo", loginInfo);
+		if(loginInfo.getLoginStatus())
+			return "index?msg=9";
+		if(true){
+		//if(bookCheck(selectTrip, numofpeople)){
+			model.addAttribute("trip", selectTrip);
+			model.addAttribute("numofpeople", numofpeople);
 	        return "confirmation";    
-		}	                    
+		}	   
+		else
+			return "index?msg=6"; // alert("Selected hotel is unavailable now, please try again!"); 
     }
-
-    public List<Order> bookCheck(Hotel hotel, String dateIn, String dateOut, int numofSingle, int numofDouble, int numofQuad) {
-    	// Given a hotel and dateIn~dateOut, and the number of room the user want to book, 
-        // this function will check if the desired room are available, and create an order for you.
-        // (If not all rooms are available, it will return null.)
-        boolean available = true;
-    	List<Room> roomlist = Global.db.getRoomsOfHotel(hotel);
-    	if (Global.db.roomLeft(roomlist.get(0), dateIn, dateOut) >= numofSingle) {   //not finished yet
-    		available = false;
-    	}
-    	if (Global.db.roomLeft(roomlist.get(1), dateIn, dateOut) >= numofDouble) {
-    		available = false;
-    	}
-    	if (Global.db.roomLeft(roomlist.get(2), dateIn, dateOut) >= numofQuad) {
-    		available = false;
-    	}
-    	if(available = true) {
-    		List<Room> orderRoomlist = new ArrayList<>();
-            List<Order> orders = new ArrayList<>();
-            if(numofSingle > 0) orders.add(new Order(numofSingle, dateIn, dateOut, roomlist.get(0)));
-            if(numofDouble > 0) orders.add(new Order(numofDouble, dateIn, dateOut, roomlist.get(1)));
-            if(numofQuad > 0) orders.add(new Order(numofQuad, dateIn, dateOut, roomlist.get(2)));
-            return orders;
-    	}else{
-            return null;
-        }
+	
+    public Boolean bookCheck(Trip trip, int numofpeople) {
+    	System.out.println("bookCheck: " + trip.lowerBound + " " + trip.upperBound);
+    	if(trip.lowerBound + numofpeople <= trip.upperBound)
+            return true;
+    	else
+    		return false;
     }
 
     @RequestMapping(value="/bookcomplete")
     public String confirmOrder() {
     	int msg;
-    	if(bookComplete(loginInfo.account, this.order)) {
+    	if(bookComplete()) {
     		msg = 7;
     		System.out.println("Book Success");
     	}
-
     	else {
     		msg = 8;
     		System.out.println("Book Fail");
@@ -88,10 +65,9 @@ public class InfoCheckController {
     	return newurl;
     }
     
-    public boolean bookComplete(Account account, List<Order> orders) {
+    private boolean bookComplete() {
         // Place an order. Return true if success, false if failed. 
-    	return Global.db.addCustomerOrder(account, orders); 
+    	return Global.db.addOrder(loginInfo.account.id, loginInfo.select_trip_id, numofpeople); 
     }
-    */
 
 }

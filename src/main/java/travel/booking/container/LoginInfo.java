@@ -10,9 +10,6 @@ import org.springframework.context.annotation.Configuration;
 public class LoginInfo {
 	public boolean islogin = false;
 	public Account account;
-	public String departure_date;
-	public String search_location;
-	public int search_person;
 	public String select_trip_id;
 	
 	@Bean

@@ -19,15 +19,14 @@ public class TripDetailController {
 	
 	@RequestMapping(value={"trip.html", "trip"}, method=RequestMethod.GET, params = {"id"})
     public String getDetailHotel(@RequestParam String id, Model model) {
-		System.out.println("getDetailTrip: " + loginInfo.departure_date+" "+loginInfo.search_location);
     	System.out.println("rooms.html id: " + id);
     	loginInfo.select_trip_id = id;
-    	/*
-    	Hotel result = Global.db.getHotel(id); 
-    	model.addAttribute("hotelInfo", result);
-    	System.out.println(result);
+    	Trip trip = new Trip();
+    	trip.title = "《玩美加族》加勒比海展望號遊輪牙買加11日";
+    	trip.travelCode = 43;
+    	//Trip result = Global.db.getHotel(id); 
     	model.addAttribute("loginInfo", loginInfo);
-    	*/
+    	model.addAttribute("trip", trip);
         return "trip";                        
     }
 }
