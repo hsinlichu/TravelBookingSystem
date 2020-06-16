@@ -138,17 +138,17 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="filter_result_wrap">
-                            <h3>Filter Result</h3>
+                            <h3>Sorting $ Filtering Result</h3>
                             <form class="filter_bordered" action="/result" method="get">
                                 <div class="filter_inner">
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div class="single_select">
                                                 <select name="sortMethod" id="sortMethod">
-                                                    <option value="PriceHigh2Low" th:selected="${sort_method=='PriceHigh2Low'}" >Price: High-Low</option>
-                                                    <option value="PriceLow2High" th:selected="${sort_method=='PriceLow2High'}" >Price: Low-High</option>
-                                                    <option value="DateRecent2Far" th:selected="${sort_method=='DateRecent2Far'}" >Date: Recent-Far</option>
-                                                    <option value="DateFar2Recent" th:selected="${sort_method=='DateFar2Recent'}" >Date: Far-Recent</option>
+                                                    <option value="PriceHigh2Low" th:selected="${sort_method=='PriceHigh2Low'}" >Price: High->Low</option>
+                                                    <option value="PriceLow2High" th:selected="${sort_method=='PriceLow2High'}" >Price: Low->High</option>
+                                                    <option value="DateRecent2Far" th:selected="${sort_method=='DateRecent2Far'}" >Date: Recent->Far</option>
+                                                    <option value="DateFar2Recent" th:selected="${sort_method=='DateFar2Recent'}" >Date: Far->Recent</option>
                                                 </select>
                                             </div>
                                         </div>
