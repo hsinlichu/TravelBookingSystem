@@ -19,7 +19,7 @@ public class TripDetailController {
 	
 	@RequestMapping(value={"trip.html", "trip"}, method=RequestMethod.GET, params = {"id"})
     public String getDetailHotel(@RequestParam String id, Model model) {
-    	System.out.println("rooms.html id: " + id);
+    	System.out.println("trip.html id: " + id);
     	loginInfo.select_trip_id = id;
     	Trip trip = new Trip();
     	trip.title = "《玩美加族》加勒比海展望號遊輪牙買加11日";

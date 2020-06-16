@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Travelo</title>
+        <title>ESOE Travel</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -139,26 +139,16 @@
                     <div class="col-lg-4">
                         <div class="filter_result_wrap">
                             <h3>Filter Result</h3>
-                            <div class="filter_bordered">
+                            <form class="filter_bordered" action="/result" method="get">
                                 <div class="filter_inner">
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div class="single_select">
-                                                <select>
-                                                    <option data-display="Country">Country</option>
-                                                    <option value="1">Africa</option>
-                                                    <option value="2">canada</option>
-                                                    <option value="4">USA</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12">
-                                            <div class="single_select">
-                                                <select>
-                                                    <option data-display="Travel type">Travel type</option>
-                                                    <option value="1">advance</option>
-                                                    <option value="2">advance</option>
-                                                    <option value="4">premium</option>
+                                                <select name="sortMethod" id="sortMethod">
+                                                    <option value="PriceHigh2Low" th:selected="${sort_method=='PriceHigh2Low'}" >Price: High-Low</option>
+                                                    <option value="PriceLow2High" th:selected="${sort_method=='PriceLow2High'}" >Price: Low-High</option>
+                                                    <option value="DateRecent2Far" th:selected="${sort_method=='DateRecent2Far'}" >Date: Recent-Far</option>
+                                                    <option value="DateFar2Recent" th:selected="${sort_method=='DateFar2Recent'}" >Date: Far-Recent</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -167,7 +157,7 @@
                                                 <span class="range">Prise range</span>
                                                 <div id="slider-range"></div>
                                                 <p>
-                                                <input type="text" id="amount" readonly style="border:0; color:#7A838B; font-weight:400;">
+                                                <input type="text" id="amount" name="amount" readonly style="border:0; color:#7A838B; font-weight:400;">
                                                 </p>
                                             </div>
                                         </div>
@@ -179,7 +169,7 @@
                                 <div class="reset_btn">
                                     <button class="boxed-btn4" type="submit">Reset</button>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                     <div class="col-lg-8">
@@ -188,7 +178,7 @@
                                 <div class="single_place row">
                                     <div class="thumb col-md-6" style="padding-left: 0px;">
                                         <img src="img/place/1.png" alt="">
-                                        <a href="#" class="prise">$500</a>
+                                        <a href="#" class="prise">Loading</a>
                                     </div>
                                     <div class="place_info col-md-6">
                                         <a href="destination_details.html"><h2>Loading</h2></a>
@@ -459,10 +449,7 @@
 
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/sprintf/1.1.2/sprintf.min.js"></script> 
                 
-
-
                 <script src="js/main.js"></script>
-                <script src="js/result.js"></script>
                 <script src="js/login.js"></script>
                 <script>
                     $('#datepicker').datepicker({
@@ -472,6 +459,40 @@
                         }
                     });
                 </script>
+                <script th:inline="javascript">
+                    /*<![CDATA[*/
+
+                    console.log("slider");
+                    $.ajax({
+                      url: "js/result.js",
+                      dataType: 'script',
+                      async: false
+                    }).done(function() {
+                        var price_from =/*[[${price_from}]]*/ 0; 
+                        var price_to =/*[[${price_to}]]*/ 0; 
+                        var show_price_from =/*[[${show_price_from}]]*/ 0; 
+                        var show_price_to =/*[[${show_price_to}]]*/ 0; 
+                        var sortMethod =/*[[${sort_method}]]*/ "None"; 
+
+                        console.log(price_from)
+                        console.log(price_to)
+                        console.log(show_price_from)
+                        console.log(show_price_to)
+                        console.log(sortMethod)
+                        $( "#slider-range" ).slider({
+                            range: true,
+                            min: price_from,
+                            max: price_to,
+                            values: [ show_price_from, show_price_to ],
+                            slide: function( event, ui ) {
+                                $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+                            }
+                        });
+                        $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+                            " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+                     } );
+
+                    /*]]>*/
                 </script>
 
     </body>

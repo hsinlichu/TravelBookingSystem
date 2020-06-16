@@ -1,9 +1,12 @@
 (function($) {
 
     'use strict';
+    var trip_array;
+
 
     $.getJSON('/GetAllTrip', function (data) {
     	console.log(data);
+        trip_array = data;
         
         $(".tripGallery .trip").remove();
         var template = `
@@ -57,7 +60,11 @@
         //$.each(data, function (key, value) {
 
         //});
+        //
+       
     });
+
+    
 })(jQuery);
 
 

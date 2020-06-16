@@ -25,10 +25,16 @@ public class ResultPageController {
 	
 	public String departure_date;
 	public String location;
-	private int star = 0;
-	private int price_from = 0;
-	private int price_to = 10000000;
-	private int sortmethod = -1;     //0->star HtoL, 1->star LtoH, 2->price HtoL, 3->price LtoH
+	private int price_from = Integer.MAX_VALUE;
+	private int price_to = Integer.MIN_VALUE;
+	private int show_price_from = Integer.MIN_VALUE;
+	private int show_price_to = Integer.MAX_VALUE;
+	private SortMethod sortMethod = SortMethod.PriceHigh2Low;
+	private List<Trip> tripList = null;
+	
+	private enum SortMethod{
+		PriceHigh2Low, PriceLow2High ,DateRecent2Far, DateFar2Recent
+	}
 
 	private static SimpleDateFormat originFormat = new SimpleDateFormat("MM/dd/yyyy");
 	private static SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -48,294 +54,98 @@ public class ResultPageController {
 		this.location = location;
 		
 		model.addAttribute("loginInfo", loginInfo);
-    	model.addAttribute("sort_method", this.sortmethod);
-    	model.addAttribute("star", this.star);
-    	model.addAttribute("price_from", this.price_from);
-    	model.addAttribute("price_to", this.price_to);
+    	model.addAttribute("sort_method", sortMethod);
+    	model.addAttribute("price_from", price_from);
+    	model.addAttribute("price_to", price_to);
+    	model.addAttribute("show_price_from", show_price_from);
+    	model.addAttribute("show_price_to", show_price_to);
         return "result";                       
 	}
 
-
-	@RequestMapping(value="/result", method=RequestMethod.GET)
-    public String getfilter(@RequestParam int star, @RequestParam int pricefrom, @RequestParam int priceto, Model model) {
-		model.addAttribute("loginInfo", loginInfo);
-		model.addAttribute("sort_method", this.sortmethod);
+	@RequestMapping(value="/result", method=RequestMethod.GET, params = {"sortMethod", "amount"})
+    public String setFilterSort(@RequestParam String sortMethod, @RequestParam String amount, Model model) {
+		System.out.println("setFilterSort");
 		
-    	System.out.println("Resultpage");
-    	System.out.println(star+"\n"+pricefrom+"\n"+priceto+"\n");
-    	
-    	this.star = star;
-    	this.price_from = pricefrom;
-    	this.price_to = priceto;
-    	model.addAttribute("star", this.star);
-    	model.addAttribute("price_from", this.price_from);
-    	model.addAttribute("price_to", this.price_to);
-        return "result";              
-	}
-
-	@RequestMapping(value="/result", method=RequestMethod.GET, params = {"sort_method"})
-    public String sort(@RequestParam String sort_method, Model model) {
+		String[] show_range = amount.replace("$", "").split(" - ");
+		this.show_price_from = Integer.parseInt(show_range[0]);
+		this.show_price_to = Integer.parseInt(show_range[1]);
+		this.sortMethod = SortMethod.valueOf(sortMethod);
+		
+		if(this.show_price_from > this.show_price_to) {
+			this.show_price_from = this.price_from;
+			this.show_price_to = this.price_to;
+			System.out.println("filter range illegal");
+		}
+		
+		System.out.println(show_price_from + " " + show_price_to + " " + sortMethod);
+		
 		model.addAttribute("loginInfo", loginInfo);
-		model.addAttribute("star", this.star);
-		model.addAttribute("price_from", this.price_from);
-    	model.addAttribute("price_to", this.price_to);
-    	System.out.println("Resultpage");
-    	System.out.println(sort_method);
-    	switch(sort_method){
-    		case "Star_HtoL": 
-    			this.sortmethod = 0;
-    			break;
-    		case "Star_LtoH": 
-    			this.sortmethod = 1;
-    			break;
-    		case "Price_HtoL": 
-    			this.sortmethod = 2;
-    			break;
-    		case "Price_LtoH": 
-    			this.sortmethod = 3;
-    			break;
-    		default:
-    			this.sortmethod = -1;
-    			break;
-
-    	}
-    	model.addAttribute("sort_method", this.sortmethod);
+    	model.addAttribute("sort_method", sortMethod);
+    	model.addAttribute("price_from", price_from);
+    	model.addAttribute("price_to", price_to);
+    	model.addAttribute("show_price_from", show_price_from);
+    	model.addAttribute("show_price_to", show_price_to);
     	
         return "result";              
 	}
 	
 	@RequestMapping(path = "/GetAllTrip", produces = "application/json; charset=UTF-8")
     @ResponseBody
-    public List<Trip> GetAllHotel() {
+    public List<Trip> GetAllHotel(Model model) {
 		System.out.println(this.departure_date);
-		List<Trip> trips =Global.db.getTrip(this.location, this.departure_date);
-		/*
-		if(sortmethod == 0)                         //sort method
-			hotel = sort_star_HtoL(hotel);
-		else if(sortmethod == 1)
-			hotel = sort_star_LtoH(hotel);
+		if(tripList == null) {
+			tripList = Global.db.getTrip(this.location, this.departure_date);
+			for(Trip t: tripList) {
+				System.out.print("1");
+				if(t.price < price_from)
+					price_from = t.price;
+				if(t.price > price_to)
+					price_to = t.price;
+			}
+			
+			show_price_from = price_from;
+			show_price_to = price_to;
+			System.out.println("\n" + show_price_from + " " + show_price_to);
+		}
+		List<Trip> subTripList = tripList;
+		if(show_price_from != price_from || show_price_to != price_to) {
+			System.out.println("Show range " + show_price_from + "~" + show_price_to);
+			subTripList = new ArrayList<Trip>();
+			for(int i = 0; i < tripList.size(); ++i) {
+				Trip t = tripList.get(i);
+				if(t.price >= show_price_from && t.price <= show_price_to) 
+					subTripList.add(t);
+			}
+		}
 		
+		switch(sortMethod) {
+			case PriceLow2High:
+				Collections.sort(subTripList, Trip.byPriceOrder());
+				System.out.println("Sort:" + "PriceLow2High");
+				break;
+			case PriceHigh2Low:
+				Collections.sort(subTripList, Trip.byReversePriceOrder());
+				System.out.println("Sort:" + "PriceHigh2Low");
+				break;
+			case DateRecent2Far:
+				Collections.sort(subTripList, Trip.byDateOrder());
+				System.out.println("Sort:" + "DateRecent2Far");
+				break;
+			case DateFar2Recent:
+				Collections.sort(subTripList, Trip.byReverseDateOrder());
+				System.out.println("Sort:" + "DateFar2Recent");
+				break;
+		}
 		
-		for (int i = 0; i < hotel.size(); i++) {    //turn Hotel to ResultHotel
-			int numofSingle = this.person % 4 % 2;
-			int numofDouble = this.person % 4 / 2;
-			int numofQuad = this.person / 4;
-			int priceofSingle = 0;
-			int priceofDouble = 0;
-			int priceofQuad = 0;
-			int leftofSingle = 0;
-			int leftofDouble = 0;
-			int leftofQuad = 0;
-			List<Room> roomslist = hotel.get(i).rooms;
-			int hotelId = hotel.get(i).id;
-			
-			for(int j = 0; j < roomslist.size(); j++) {          //take Room list
-				if(roomslist.get(j).type.equals("Single")) {
-					priceofSingle = roomslist.get(j).price;
-					leftofSingle = Global.db.roomLeft(roomslist.get(j), this.checkin_date, this.checkout_date);
-				}
-				if(roomslist.get(j).type.equals("Double")) {
-					priceofDouble = roomslist.get(j).price;
-					leftofDouble = Global.db.roomLeft(roomslist.get(j), this.checkin_date, this.checkout_date);
-				}
-				if(roomslist.get(j).type.equals("Quad")){
-					priceofQuad = roomslist.get(j).price;
-					leftofQuad = Global.db.roomLeft(roomslist.get(j), this.checkin_date, this.checkout_date);
-				}
-			}
-			
-			ResultHotel addHotel = new ResultHotel();
-			addHotel.id = hotelId;
-			addHotel.locality = hotel.get(i).locality;
-			addHotel.star = hotel.get(i).star;
-			addHotel.street = hotel.get(i).street;
-			addHotel.singleRoomNum = leftofSingle;
-			addHotel.singleRoomPrice = priceofSingle;
-			addHotel.doubleRoomNum = leftofDouble;
-			addHotel.doubleRoomPrice = priceofDouble;
-			addHotel.quadRoomNum = leftofQuad;
-			addHotel.quadRoomPrice = priceofQuad;
-			if(leftofSingle < numofSingle && leftofDouble < numofDouble && leftofQuad < numofQuad){
-				numofDouble = 0;
-			    numofQuad = 0;
-				numofSingle = 0;
-			}
-			else if(leftofSingle < numofSingle && leftofDouble < numofDouble) {
-				numofDouble = 0;
-			    numofSingle = 0;
-				if(this.person % 4 == 0) 
-					numofQuad = this.person / 4;
-				else 
-					numofQuad = this.person / 4 + 1;	
-			}			
-			else if(leftofSingle < numofSingle && leftofQuad < numofQuad){
-				numofQuad = 0;
-			    numofSingle = 0;
-				if(this.person % 2 ==0)
-					numofDouble = this.person / 2;
-				else
-					numofDouble = this.person / 2 + 1;
-			}
-			else if(leftofDouble < numofDouble && leftofQuad < numofQuad) {
-				numofDouble = 0;
-			    numofQuad = 0;
-				numofSingle = this.person;
-			}
-			else if(leftofSingle < numofSingle) {
-				numofQuad = this.person / 4;
-			    numofSingle = 0;
-				if(this.person % 4 % 2 == 0)
-					numofDouble = this.person % 4 / 2;
-				else {
-					numofDouble = this.person % 4 / 2 + 1;
-				}
-			}
-			else if(leftofDouble < numofDouble) {
-				numofDouble = 0;
-				numofQuad = this.person / 4;
-				numofSingle = this.person % 4;
-			}
-			else if(leftofQuad < numofQuad) {
-				numofDouble = this.person / 2;
-				numofSingle = this.person % 2;
-				numofQuad = 0;
-			}
-			else {
-				numofQuad = this.person / 4;
-				numofDouble = this.person % 4 / 2;
-				numofSingle = this.person % 4 % 2;
-			}
-			addHotel.avgprice = numofSingle * priceofSingle + numofDouble * priceofDouble + numofQuad * priceofQuad;
-			resultHotel.add(addHotel);
-			
-			
-			  System.out.println("-------Hotel " + resultHotel.get(i).id + "-------");
-			  System.out.println("star: " + resultHotel.get(i).star);
-			  System.out.println("locality: " + resultHotel.get(i).locality);
-			  System.out.println("street: " + resultHotel.get(i).street);
-			  System.out.println("Single room[price: " + resultHotel.get(i).singleRoomPrice
-			  + ", quantity: " + resultHotel.get(i).singleRoomNum + "]");
-			  System.out.println("Double room[price: " + resultHotel.get(i).doubleRoomPrice
-			  + ", quantity: " + resultHotel.get(i).doubleRoomNum + "]");
-			  System.out.println("Quad room[price: " + resultHotel.get(i).quadRoomPrice +
-			  ", quantity: " + resultHotel.get(i).quadRoomNum + "]");
-			  System.out.println("average price: " + resultHotel.get(i).avgprice);
-			  System.out.println(" ");
-			 
-			
-		}	
-		*/
-		System.out.println("successful searching" );
-		/*
-		if(sortmethod == 2)
-			resultHotel = sort_price_HtoL(resultHotel);
-		else if(sortmethod == 3)
-			resultHotel = sort_price_LtoH(resultHotel);
-		resultHotel = FilteredHotel(resultHotel, star, price_from, price_to);
-		*/
-        return trips;
+		model.addAttribute("loginInfo", loginInfo);
+    	model.addAttribute("sort_method", sortMethod.name());
+    	model.addAttribute("price_from", price_from);
+    	model.addAttribute("price_to", price_to);
+    	model.addAttribute("show_price_from", show_price_from);
+    	model.addAttribute("show_price_to", show_price_to);
+    	System.out.println(show_price_from + " " + show_price_to);
+		System.out.println("successful searching");
+		
+        return subTripList;
     }
-	
-	/*
-	public List<ResultHotel> FilteredHotel(List<ResultHotel> search,int star,int downfloor,int upfloor){//create new list to store totalprice within downfloor price and upfloor price
-		if(upfloor == -1) upfloor = 100000000;
-		List<ResultHotel> filteredtotal=new ArrayList<>();
-		for(int i=0;i<search.size();i++) {
-			if(star == 0 || search.get(i).star==star) {
-				if(search.get(i).avgprice>=downfloor&&search.get(i).avgprice<=upfloor) filteredtotal.add(search.get(i));
-			}
-		}
-		for(int j=0;j<filteredtotal.size();j++) {
-			System.out.println("-------Hotel " + filteredtotal.get(j).id + "-------");
-			System.out.println("star: " + filteredtotal.get(j).star);
-			System.out.println("locality: " + filteredtotal.get(j).locality);
-			System.out.println("street: " + filteredtotal.get(j).street);
-			System.out.println("Single room[price: " + filteredtotal.get(j).singleRoomPrice + ", quantity: " + filteredtotal.get(j).singleRoomNum + "]");
-			System.out.println("Double room[price: " + filteredtotal.get(j).doubleRoomPrice + ", quantity: " + filteredtotal.get(j).doubleRoomNum + "]");
-			System.out.println("Quad room[price: " + filteredtotal.get(j).quadRoomPrice + ", quantity: " + filteredtotal.get(j).quadRoomNum + "]");
-			System.out.println("average price: " + filteredtotal.get(j).avgprice);
-			System.out.println(" ");
-		}
-				
-		return filteredtotal;
-	}
-	public static List<Hotel> sort_star_LtoH(List<Hotel> search) {
-		List<Hotel> tmp = search;
-		Hotel swap =new Hotel();
-		boolean check = true;
-		while (check) {
-			check = false;
-			for (int i = 0; i < tmp.size()-1; i++) {
-				if (tmp.get(i).star > tmp.get(i+1).star) {
-					swap = tmp.get(i);
-					tmp.set(i, tmp.get(i+1));
-					tmp.set(i+1, swap);
-					check = true;
-				}
-			}
-		}
-		return tmp;
-		
-	}
-	
-	public static List<Hotel> sort_star_HtoL(List<Hotel> search) {
-		List<Hotel> tmp = search;
-		Hotel swap =new Hotel();
-		boolean check = true;
-		while (check) {
-			check = false;
-			for (int i = 0; i < tmp.size()-1; i++) {
-				if (tmp.get(i).star < tmp.get(i+1).star) {
-					swap = tmp.get(i);
-					tmp.set(i, tmp.get(i+1));
-					tmp.set(i+1, swap);
-					check = true;
-				}
-			}
-		}
-		return tmp;
-		
-	}
-	public static List<ResultHotel> sort_price_LtoH(List<ResultHotel> search) {
-		List<ResultHotel> tmp = search;
-		ResultHotel swap =new ResultHotel();
-		boolean check = true;
-		while (check) {
-			check = false;
-			for (int i = 0; i < tmp.size()-1; i++) {
-				if (tmp.get(i).avgprice > tmp.get(i+1).avgprice) {
-					swap = tmp.get(i);
-					tmp.set(i, tmp.get(i+1));
-					tmp.set(i+1, swap);
-					check = true;
-				}
-			}
-		}
-		return tmp;
-		
-	}
-	public static List<ResultHotel> sort_price_HtoL(List<ResultHotel> search) {
-		List<ResultHotel> tmp = search;
-		ResultHotel swap =new ResultHotel();
-		boolean check = true;
-		while (check) {
-			check = false;
-			for (int i = 0; i < tmp.size()-1; i++) {
-				if (tmp.get(i).avgprice < tmp.get(i+1).avgprice) {
-					swap = tmp.get(i);
-					tmp.set(i, tmp.get(i+1));
-					tmp.set(i+1, swap);
-					check = true;
-				}
-			}
-		}
-		return tmp;
-		
-	}
-	
-
-	
-	
-	*/
-	
 }
