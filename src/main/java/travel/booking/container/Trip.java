@@ -15,6 +15,8 @@ public class Trip extends Container implements Serializable{
 	public String title;
 	@SerializedName("travel_code")
 	public int travelCode;
+	@SerializedName("travel_code_name")
+	public String travelCodeName;
 	@SerializedName("product_key")
 	public String productKey;
 	@SerializedName("price")

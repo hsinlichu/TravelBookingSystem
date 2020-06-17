@@ -166,12 +166,23 @@ public class TravelDatabase extends Database {
 		Gson gson = new Gson();
 		List<Trip> trips = new ArrayList<>();
 		for(HashMap<String, String> tripMap : tripsMap) {
+			String travelCodeName = getTripCodeName(tripMap.get("travel_code"));
+			//System.out.println(travelCodeName);
+			tripMap.put("travel_code_name", travelCodeName);
 			String jsonFormat = gson.toJson(tripMap);
 			Trip trip = gson.fromJson(jsonFormat, Trip.class);
 			trips.add(trip);
 		}
 		
 		return trips;
+	}
+	
+	public String getTripCodeName(String travelCode) {
+		HashMap<String, String> attr = new HashMap<>();
+		attr.put("travel_code", travelCode);
+		List<HashMap<String, String>> results = select("TravelCode", attr);
+		if(results.size() == 0) return null;
+		else return results.get(0).get("travel_code_name");
 	}
 	
 	/*********** Order ***************/
