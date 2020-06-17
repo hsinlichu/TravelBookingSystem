@@ -55,7 +55,7 @@
                                     <div class="main-menu d-none">
                                         <nav>
                                             <ul id="navigation">
-                                                <h3 th:if="${loginInfo.islogin} == True">Welcome <span style="color:#1EC6B6" th:text="${loginInfo.account.name}">James Chu</span></h3>
+                                                <h3 th:if="${session.loginInfo.islogin} == True">Welcome <span style="color:#1EC6B6" th:text="${session.loginInfo.account.name}">James Chu</span></h3>
                                                 <li><a class="active" href="./index.html">home</a></li>
                                                 <li><a href="/ordermanagement.html">Manage My Order</a></li>
                                                 <li><a href="/hotelmanagement.html">Manage My hotel</a></li>
@@ -70,14 +70,14 @@
                                     </a>
                                 </div>
                                 <div class="login_icon" data-aos="fade"
-                                                        th:if="${loginInfo.islogin} == False">
+                                                        th:if="${session.loginInfo.islogin} == False">
                                     <a data-toggle="modal" data-target="#loginModal"> <i
                                                            class="fa fa-sign-in"></i>
                                     </a>
                                 </div>
                                 <div class="col-12">
                                     <div class="mobile_menu d-block"
-                                         th:if="${loginInfo.islogin} == true"></div>
+                                         th:if="${session.loginInfo.islogin} == true"></div>
                                 </div>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                 <div class="row align-items-center">
                     <div class="col-lg-3">
                         <div class="form_area">
-                            <h3>Relex yourself:</h3>
+                            <h3>Relax yourself:</h3>
                         </div>
                     </div>
                     <div class="col-lg-9">
@@ -145,10 +145,10 @@
                                         <div class="col-lg-12">
                                             <div class="single_select">
                                                 <select name="sortMethod" id="sortMethod">
-                                                    <option value="PriceHigh2Low" th:selected="${sort_method=='PriceHigh2Low'}" >Price: High->Low</option>
-                                                    <option value="PriceLow2High" th:selected="${sort_method=='PriceLow2High'}" >Price: Low->High</option>
-                                                    <option value="DateRecent2Far" th:selected="${sort_method=='DateRecent2Far'}" >Date: Recent->Far</option>
-                                                    <option value="DateFar2Recent" th:selected="${sort_method=='DateFar2Recent'}" >Date: Far->Recent</option>
+                                                    <option value="PriceHigh2Low" th:selected="${session.resultSetting.sortMethod.name()=='PriceHigh2Low'}" >Price: High->Low</option>
+                                                    <option value="PriceLow2High" th:selected="${session.resultSetting.sortMethod.name()=='PriceLow2High'}" >Price: Low->High</option>
+                                                    <option value="DateRecent2Far" th:selected="${session.resultSetting.sortMethod.name()=='DateRecent2Far'}" >Date: Recent->Far</option>
+                                                    <option value="DateFar2Recent" th:selected="${session.resultSetting.sortMethod.name()=='DateFar2Recent'}" >Date: Far->Recent</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -468,11 +468,12 @@
                       dataType: 'script',
                       async: false
                     }).done(function() {
-                        var price_from =/*[[${price_from}]]*/ 0; 
-                        var price_to =/*[[${price_to}]]*/ 0; 
-                        var show_price_from =/*[[${show_price_from}]]*/ 0; 
-                        var show_price_to =/*[[${show_price_to}]]*/ 0; 
-                        var sortMethod =/*[[${sort_method}]]*/ "None"; 
+                    
+                        var price_from =/*[[${session.resultSetting.price_from}]]*/ 0; 
+                        var price_to =/*[[${session.resultSetting.price_to}]]*/ 0; 
+                        var show_price_from =/*[[${session.resultSetting.show_price_from}]]*/ 0; 
+                        var show_price_to =/*[[${session.resultSetting.show_price_to}]]*/ 0; 
+                        var sortMethod =/*[[${session.resultSetting.sortMethod}]]*/ "None"; 
 
                         console.log(price_from)
                         console.log(price_to)
@@ -490,7 +491,7 @@
                         });
                         $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
                             " - $" + $( "#slider-range" ).slider( "values", 1 ) );
-                     } );
+                     });
 
                     /*]]>*/
                 </script>

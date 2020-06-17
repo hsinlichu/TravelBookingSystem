@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Enumeration;
+
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import travel.booking.Global;
 import travel.booking.container.Account;
@@ -15,11 +18,17 @@ import travel.booking.container.LoginInfo;
 
 @Controller
 public class LoginController {
-	@Resource(name = "loginInfoSession")
+	//@Resource(name = "loginInfoSession")
 	LoginInfo loginInfo;
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public String getLogin(@RequestParam String email, @RequestParam String passwd, Model model) {
+	public String getLogin(@RequestParam String email, @RequestParam String passwd, Model model, HttpSession session) {
+		Enumeration<String> e = session.getAttributeNames();
+		  while (e.hasMoreElements()){
+			String s = e.nextElement();
+			System.out.println(s);
+			System.out.println("**" + session.getAttribute(s));
+		  }
 		System.out.println("LoginController");
 		System.out.println("Original Status: " + loginInfo.islogin);
 		

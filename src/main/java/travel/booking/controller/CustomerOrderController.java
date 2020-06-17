@@ -26,7 +26,7 @@ import javax.validation.Valid;
 
 @Controller
 public class CustomerOrderController {         
-	@Resource(name = "loginInfoSession")
+	//@Resource(name = "loginInfoSession")
 	LoginInfo loginInfo;
 	String errorMessage = "Edit failed!";
 	

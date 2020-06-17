@@ -19,7 +19,7 @@ import travel.booking.container.*;
 
 @Controller
 public class OwnerOrderController {         
-    @Resource(name = "loginInfoSession")
+    //@Resource(name = "loginInfoSession")
 	LoginInfo loginInfo;
 	
 	@RequestMapping(value={"hotelordermanagement", "hotelordermanagement.html"})
