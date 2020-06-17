@@ -20,10 +20,10 @@ public class LoginController {
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	public String getLogin(@RequestParam String email, @RequestParam String passwd, Model model) {
+		System.out.println("LoginController");
 		System.out.println("Original Status: " + loginInfo.islogin);
 		
 		int msg = 0;
-		/*
 		Account result = Global.db.verifyAccount(email, passwd);
 		if (result != null) {
 			System.out.println(email + " login succeed");
@@ -36,8 +36,7 @@ public class LoginController {
 			System.out.println(email + " login failed");
 			msg = 1;
 		}
-		*/
-		loginInfo.islogin = true;
+
 		model.addAttribute("loginInfo", loginInfo);
 		System.out.println("New Status: " + loginInfo.islogin);
 		
@@ -50,7 +49,7 @@ public class LoginController {
 	public String getLogin(@RequestParam String firstname, @RequestParam String lastname, @RequestParam String email, @RequestParam String passwd, Model model) {
 		int msg = 0;
 		String name = lastname + firstname;
-		/*
+		
 		Account result = Global.db.addAccount(name, email, passwd);
 		if (result != null) {
 			System.out.println(name + " has registered successfully.");
@@ -58,7 +57,7 @@ public class LoginController {
 		}
 		else
 			msg = 3;
-		*/
+		
 		String newurl = "redirect:/";
 		newurl += ("?msg=" + msg);
         return newurl;

@@ -109,7 +109,7 @@
       border-radius: 6px;
       background: #ccc;
       color: #fff; }
-  .slicknav_nav a {
+  .slicknav_nav a, h3 {
     padding: 5px 10px;
     margin: 2px 5px;
     text-decoration: none;
