@@ -177,6 +177,19 @@ public class TravelDatabase extends Database {
 		return trips;
 	}
 	
+	public Trip getTrip(String tripID){
+		HashMap<String, String> attr = new HashMap<>();
+		attr.put("trip_id", tripID);
+		List<HashMap<String, String>> results = select("Trip", attr);
+		if(results.size() == 0) return null;
+		HashMap<String, String> result = results.get(0);
+		String travelCodeName = getTripCodeName(result.get("travel_code"));
+		result.put("travel_code_name", travelCodeName);
+		String jsonFormat = gson.toJson(result);
+		Trip trip = gson.fromJson(jsonFormat, Trip.class);
+		return trip;
+	}
+	
 	public String getTripCodeName(String travelCode) {
 		HashMap<String, String> attr = new HashMap<>();
 		attr.put("travel_code", travelCode);

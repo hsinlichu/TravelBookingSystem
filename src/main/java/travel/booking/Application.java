@@ -21,13 +21,15 @@ public class Application {
 		Account userA = Global.db.addAccount("UserA", "UserA@gmail.com", "aaa"); 
 		userA  = Global.db.verifyAccount("UserA@gmail.com", "aaa"); 
 		System.out.println(userA);
-		List<Trip> trips = Global.db.getTrip("美國", "2020-07-31");
+		List<Trip> trips = Global.db.getTrip("美國", "2020-07-31");	
 		System.out.println(trips);
 		Global.db.addOrder(userA.id, trips.get(0).id, 10);
 		List<Order> orders = Global.db.getOrder(userA.id);
 		System.out.println(orders); 
 		System.out.println(Global.db.modifyOrder(userA.id, orders.get(0).id, 12));
 		System.out.println(Global.db.cancelOrder(userA.id, orders.get(0).id));
+		Trip trip = Global.db.getTrip("7561118d-54f6-4cb7-843d-500c3f82fcdb");
+		System.out.println(trip);
 	}
 
 }
