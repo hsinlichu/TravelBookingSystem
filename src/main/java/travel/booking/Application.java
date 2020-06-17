@@ -30,6 +30,7 @@ public class Application {
 		System.out.println(Global.db.cancelOrder(userA.id, orders.get(0).id));
 		Trip trip = Global.db.getTrip("7561118d-54f6-4cb7-843d-500c3f82fcdb");
 		System.out.println(trip);
+		System.out.println(Global.db.getTripQuantity("59466c0e-dbc7-4fdc-927e-ee06f1a4632d"));
 	}
 
 }

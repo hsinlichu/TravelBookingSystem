@@ -198,6 +198,18 @@ public class TravelDatabase extends Database {
 		else return results.get(0).get("travel_code_name");
 	}
 	
+	public int getTripQuantity(String trip_id) {
+		HashMap<String, String> attr = new HashMap<>();
+		attr.put("trip_id", trip_id);
+		List<HashMap<String, String>> results = select("Order", attr);
+		if(results.size() == 0) return -1;
+		int total = 0;
+		for(HashMap<String, String> result: results) {
+			total += Integer.parseInt(result.get("quantity"));
+		}
+		return total;
+	}
+	
 	/*********** Order ***************/
 	
 	public Boolean addOrder(String accountID, String tripID, int quantity){
