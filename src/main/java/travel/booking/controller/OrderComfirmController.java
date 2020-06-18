@@ -97,7 +97,8 @@ public class OrderComfirmController {
     
     private boolean bookComplete(Account account, String tripID, int numofpeople) {
         // Place an order. Return true if success, false if failed. 
-    	return Global.db.addOrder(account.id, tripID, numofpeople); 
+    	Response response = Global.db.addOrder(account.id, tripID, numofpeople);
+    	return response.status.equals("OK");
     }
 
 }
