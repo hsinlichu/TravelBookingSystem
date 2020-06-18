@@ -23,14 +23,16 @@ public class Application {
 		System.out.println(userA);
 		List<Trip> trips = Global.db.getTrip("美國", "2020-07-31");	
 		System.out.println(trips);
-		Global.db.addOrder(userA.id, trips.get(0).id, 10);
+		System.out.println(Global.db.addOrder(userA.id, trips.get(0).id, 10));
 		List<Order> orders = Global.db.getOrder(userA.id);
 		System.out.println(orders); 
 		System.out.println(Global.db.modifyOrder(userA.id, orders.get(0).id, 12));
 		System.out.println(Global.db.cancelOrder(userA.id, orders.get(0).id));
 		Trip trip = Global.db.getTrip("7561118d-54f6-4cb7-843d-500c3f82fcdb");
 		System.out.println(trip);
-		System.out.println(Global.db.getTripQuantity("59466c0e-dbc7-4fdc-927e-ee06f1a4632d"));
+		System.out.println(Global.db.getTripQuantity(trips.get(0).id));
+		System.out.println(Global.db.getRemainTripQuantity(trips.get(0).id));
+		System.out.println(Global.db.addOrder(userA.id, trips.get(0).id, 10));
 	}
 
 }
