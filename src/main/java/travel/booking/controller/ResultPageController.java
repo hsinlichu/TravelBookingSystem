@@ -91,25 +91,24 @@ public class ResultPageController {
 		resultSetting.location = location;
 		
 		System.out.println("GetTrip");
-		if (resultSetting.tripList == null) {
-			resultSetting.tripList = Global.db.getTrip(resultSetting.location, resultSetting.departure_date);
-			for (Trip t : resultSetting.tripList) {
-				System.out.print("1");
-				if (t.price < resultSetting.price_from)
-					resultSetting.price_from = t.price;
-				if (t.price > resultSetting.price_to)
-					resultSetting.price_to = t.price;
-			}
-			resultSetting.show_price_from = resultSetting.price_from;
-			resultSetting.show_price_to = resultSetting.price_to;
-			System.out.println("\n" + resultSetting.show_price_from + " " + resultSetting.show_price_to);
+		resultSetting.tripList = Global.db.getTrip(resultSetting.location, resultSetting.departure_date);
+		for (Trip t : resultSetting.tripList) {
+			System.out.print("1");
+			if (t.price < resultSetting.price_from)
+				resultSetting.price_from = t.price;
+			if (t.price > resultSetting.price_to)
+				resultSetting.price_to = t.price;
 		}
+		resultSetting.show_price_from = resultSetting.price_from;
+		resultSetting.show_price_to = resultSetting.price_to;
+		System.out.println("\n" + resultSetting.show_price_from + " " + resultSetting.show_price_to);
+		
 
 		System.out.println("done");
 		return "result";
 	}
 
-	@RequestMapping(value = "/result", method = RequestMethod.GET, params = { "sortMethod", "amount" })
+	@RequestMapping(value = "/result", method = RequestMethod.GET, params = { "sortMethod", "amount"})
 	public String setFilterSort(@RequestParam String sortMethod, @RequestParam String amount, Model model, HttpSession session) {
 		System.out.println("setFilterSort");
 		

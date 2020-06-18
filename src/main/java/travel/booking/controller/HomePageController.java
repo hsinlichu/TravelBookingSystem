@@ -4,9 +4,6 @@
 package travel.booking.controller;
 
 import java.util.Enumeration;
-import java.util.Map;
-
-import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -14,8 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import travel.booking.container.LoginInfo;
@@ -38,7 +33,7 @@ public class HomePageController {
 	}
 	
 	@RequestMapping(value={"", "/", "index.html", "index"}, method=RequestMethod.GET, params = {})
-    public String getHomePage(HttpSession session) {
+    public String getHomePage(HttpSession session, Model model) {
 		System.out.println("--- Session data ---");
 		Enumeration<String> e = session.getAttributeNames();
 		  while (e.hasMoreElements()){
@@ -54,18 +49,12 @@ public class HomePageController {
 		
     	System.out.println("Home Page");
     	//System.out.println("New Status: " + loginInfo.islogin);
-        return "index";
-    }
-	
-	@RequestMapping(value={"", "/", "index.html", "index"}, method=RequestMethod.GET, params = {"msg"})
-    public String getHomePage(@RequestParam String msg, HttpSession session) {
-		/*
-		 * System.out.println(msg); model.addAttribute("loginInfo", loginInfo);
-		 * model.addAttribute("msg", msg); System.out.println("Home Page MSG");
-		 * System.out.println("New Status: " + loginInfo.islogin);
-		 * 
-		 * System.out.println(loginInfo.account);
-		 */
+    	
+    	Integer msg = (Integer) model.getAttribute("msg");
+    	if(msg != null) {
+    		System.out.println("Home Page MSG: " + msg);
+    	    model.addAttribute("msg", msg); 
+    	}
         return "index";
     }
 }

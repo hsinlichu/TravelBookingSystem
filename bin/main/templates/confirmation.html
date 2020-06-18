@@ -27,10 +27,15 @@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css">
 
     <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="./css/login.css">
-        <link rel="stylesheet" href="./css/header.css">
+    <link rel="stylesheet" href="./css/login.css">
+    <link rel="stylesheet" href="./css/header.css">
 
     <!-- <link rel="stylesheet" href="css/responsive.css"> -->
+    <style>
+    input {
+      color: #000;
+    }    
+    </style>
 </head>
 
 <body>
@@ -56,7 +61,7 @@
 								<div class="main-menu d-none">
 									<nav>
 										<ul id="navigation">
-                                            <h3 th:if="${loginInfo.islogin} == True">Welcome <span style="color:#1EC6B6" th:text="${loginInfo.account.name}">James Chu</span></h3>
+                                            <h3 th:if="${loginInfo.islogin} == True">Welcome <span style="color:#1EC6B6" th:text="${session.loginInfo.account.name}">James Chu</span></h3>
 											<li><a class="active" href="./index.html">home</a></li>
                                             <li><a href="/ordermanagement.html">Manage My Order</a></li>
                                             <li><a href="/hotelmanagement.html">Manage My hotel</a></li>
@@ -71,14 +76,14 @@
 								</a>
 							</div>
 							<div class="login_icon" data-aos="fade"
-								th:if="${loginInfo.islogin} == False">
+								th:if="${session.loginInfo.islogin} == False">
 								<a data-toggle="modal" data-target="#loginModal"> <i
 									class="fa fa-sign-in"></i>
 								</a>
 							</div>
 							<div class="col-12">
 								<div class="mobile_menu d-block"
-									th:if="${loginInfo.islogin} == true"></div>
+									th:if="${session.loginInfo.islogin} == true"></div>
 							</div>
 						</div>
 					</div>
@@ -112,21 +117,21 @@
                             <div class="row mt-3">
                                 <div class="col-md-6">
                                     <label for="name">Name</label>
-                                    <input type="text" class="single-input" id="name" th:value="${loginInfo.account.name}" disabled>
+                                    <input type="text" class="single-input" id="name" th:value="${session.loginInfo.account.name}" disabled>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="email">Email</label>
-                                    <input type="text" class="single-input" id="email" th:value="${loginInfo.account.email}" disabled>
+                                    <input type="text" class="single-input" id="email" th:value="${session.loginInfo.account.email}" disabled>
                                 </div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-md-10">
+                                <div class="col-md-9">
                                     <label for="name">Title</label>
                                     <input type="text" class="single-input" id="name" th:value="${trip.title}" disabled>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label for="email">Location</label>
-                                    <input type="text" class="single-input" id="email" th:value="${trip.travelCode}" disabled>
+                                    <input type="text" class="single-input" id="email" th:value="${trip.travelCodeName}" disabled>
                                 </div>
                             </div>
                             <div class="row mt-3">

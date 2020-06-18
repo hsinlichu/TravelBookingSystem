@@ -18,7 +18,7 @@
                 </div>
                 <div class="place_info col-md-6">
                     <a href="/trip?id=%(id)s"><h4>%(title)s</h4></a>
-                    <p>United State of America</p>
+                    <p>%(travelCodeName)s</p>
                     <span>Start date: %(startDate)s</span></br>
                     <span>End date: %(endDate)s</span></br>
                     <span>Remained sit: TBA</span></br>

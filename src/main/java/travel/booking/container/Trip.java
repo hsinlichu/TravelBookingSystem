@@ -34,6 +34,10 @@ public class Trip extends Container implements Serializable, Comparator<Trip>{
 	@SerializedName("upper_bound")
 	public int upperBound;
 	
+	public String toString() {
+		return id + " " + title + " " +  travelCode + " " +  travelCodeName + " " + productKey + " " + price + " " +  startDate + " " +  endDate + " " +  lowerBound + " " + upperBound;
+	}
+	
 	
 	public static Comparator<Trip> byPriceOrder(){
     	return new ByPriceOrder();	
@@ -95,6 +99,8 @@ public class Trip extends Container implements Serializable, Comparator<Trip>{
 	public int compare(Trip tripA, Trip tripB) {
 		return ((Integer)tripA.price).compareTo((Integer)tripB.price);
 	}
+	
+	
 
     
 }

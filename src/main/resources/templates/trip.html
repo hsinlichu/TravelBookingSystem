@@ -95,7 +95,7 @@
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="bradcam_text text-center">
-                            <h3 th:text="${trip.title}">Trip</h3>
+                            <h3>Trip Detail</h3>
                         </div>
                     </div>
                 </div>
@@ -108,20 +108,26 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-9">
                     <div class="destination_info">
-                        <h3>Description</h3>
-                        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing.</p>
-                        <p>Variations of passages of lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing.</p>
+                        <h2 th:text="${trip.title}" class="text-center">Loading..</h2>
+                        <p></p>
+                        <p></p>
+                        <p>千禧公園是為了2000年千囍年所規劃的公園，更是城市公共藝術的集大成，最有名的是千禧公園的大地標～雲門，同時也是芝加哥的地標之一。矗立在公園正中央的巨型銀色豆子，遠遠望去像是從外太空掉落到凡間的不明物體，在陽光下閃閃發亮，走近一看，鄰近千禧公園的建築、人、包括自己，全都倒映在這座不鏽鋼鑄造的巨豆上，設計者透過公共藝術傳達的意涵，再度說明了，人才是城市最重要的主體。離公園不遠處，有個特別的裝置藝術～小丑噴泉，設計者收集了兩千多張芝加哥市民的臉部表情，並且輪流出現在五十英呎的巨型的螢幕上，有年輕人的臉、老人的臉、男人的臉、女人的臉、黃種人的臉、黑人的臉、白人的臉，很能代表芝加哥的多元性。 </p>
+                        <p>白金漢噴泉也是芝加哥的地標之一，位於格蘭特公園中心，建於1927年，是世界上最大的噴泉之一。此噴泉象徵密西根湖，造型採用洛可可婚禮蛋糕樣式，靈感來自凡爾賽宮的勒托噴泉。註：如遇白金漢噴泉未開啟噴泉仍照原定行程安排前往，您仍可欣賞這知名的噴泉。 </p>
                         <div class="single_destination">
-                            <h4>Day-01</h4>
-                            <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words.</p>
+                            <h4>Start Day</h4>
+                            <p th:text="${trip.startDate}"></p>
                         </div>
                         <div class="single_destination">
-                            <h4>Day-02</h4>
-                            <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words.</p>
+                            <h4>End Day</h4>
+                            <p th:text="${trip.endDate}"></p>
                         </div>
                         <div class="single_destination">
-                            <h4>Day-03</h4>
-                            <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words.</p>
+                            <h4>Location</h4>
+                            <p th:text="${trip.travelCodeName}"></p>
+                        </div>
+                        <div class="single_destination">
+                            <h4>Remained Seat</h4>
+                            <p >Not Imolement</p>
                         </div>
                     </div>
                     <div class="bordered_1px"></div>
@@ -131,14 +137,16 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="single_input">
+                                        <input type="text" id="travelid" name="travelid" th:value="${trip.id}" style="visibility:hidden">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <div class="single_input">
                                         <input type="number" id="numofpeople" name="numofpeople" placeholder="Number of people" min="0" required>
                                     </div>
                                 </div>
-                                <div class="col-lg-12">
-                                    <div class="single_input">
-                                        <textarea name="" id="" cols="30" rows="10" placeholder="Message" ></textarea>
-                                    </div>
-                                </div>
+                                
                                 <div class="col-lg-12">
                                     <div class="submit_btn">
                                         <button class="boxed-btn4" type="submit" th:if="${loginInfo.islogin} == False" disabled>Please Login First!</button>

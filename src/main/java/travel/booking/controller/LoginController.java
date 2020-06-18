@@ -3,9 +3,11 @@ package travel.booking.controller;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import java.util.Enumeration;
 
@@ -17,9 +19,13 @@ import travel.booking.container.Account;
 import travel.booking.container.LoginInfo;
 
 @Controller
+@SessionAttributes({"loginInfo"})
 public class LoginController {
-	//@Resource(name = "loginInfoSession")
-	LoginInfo loginInfo;
+	@ModelAttribute("loginInfo")
+	public LoginInfo addLoginInfo() {
+		System.out.println("LoginInfo @ModelAttribute");
+		return new LoginInfo();
+	}
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	public String getLogin(@RequestParam String email, @RequestParam String passwd, Model model, HttpSession session) {
@@ -30,6 +36,7 @@ public class LoginController {
 			System.out.println("**" + session.getAttribute(s));
 		  }
 		System.out.println("LoginController");
+		LoginInfo loginInfo = (LoginInfo) model.getAttribute("loginInfo");
 		System.out.println("Original Status: " + loginInfo.islogin);
 		
 		int msg = 0;
@@ -48,10 +55,8 @@ public class LoginController {
 
 		model.addAttribute("loginInfo", loginInfo);
 		System.out.println("New Status: " + loginInfo.islogin);
-		
-		String newurl = "redirect:/";
-		newurl += ("?msg=" + msg);
-        return newurl;
+		model.addAttribute("msg", msg);
+        return "index";
     }
 	
 	@RequestMapping(value="/signup", method=RequestMethod.POST)
@@ -67,13 +72,13 @@ public class LoginController {
 		else
 			msg = 3;
 		
-		String newurl = "redirect:/";
-		newurl += ("?msg=" + msg);
-        return newurl;
+		model.addAttribute("msg", msg);
+        return "index";
     }
 	@RequestMapping(value="/signout", method=RequestMethod.GET)
 	public String logout(Model model) {
 		System.out.println("try logout");
+		LoginInfo loginInfo = (LoginInfo) model.getAttribute("loginInfo");
 		loginInfo.islogin = false;
 		loginInfo.account = null;
 		int msg = 0;
@@ -86,9 +91,7 @@ public class LoginController {
 		}
 		else
 			msg = 5;
-		
-		String newurl = "redirect:/";
-		newurl += ("?msg=" + msg);
-        return newurl;
+		model.addAttribute("msg", msg);
+        return "index";
     }
 }

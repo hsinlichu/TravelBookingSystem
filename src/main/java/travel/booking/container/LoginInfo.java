@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 public class LoginInfo {
 	public boolean islogin = false;
 	public Account account;
-	public String select_trip_id;
 	
 	/*
 	 * @Bean
@@ -18,6 +17,9 @@ public class LoginInfo {
 	 * @SessionScope public LoginInfo loginInfoSession() {
 	 * System.out.println("loginInfoSession!!!"); return new LoginInfo(); }
 	 */
+	public String toString() {
+		return islogin + " " + account;
+	}
 	
 	public Boolean getLoginStatus() {
 	    return this.islogin;

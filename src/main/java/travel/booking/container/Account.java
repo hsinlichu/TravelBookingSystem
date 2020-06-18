@@ -15,6 +15,10 @@ public class Account extends Container implements Serializable {
 	public String email;
 	@SerializedName("name")
 	public String name;
+	
+	public String toString() {
+		return id + " " + email + " " + name;
+	}
 
 
 }

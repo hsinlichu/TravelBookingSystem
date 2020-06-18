@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -20,15 +21,20 @@ import travel.booking.Global;
 import travel.booking.container.*;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 
 
 @Controller
+@SessionAttributes("loginInfo")
 public class CustomerOrderController {         
-	//@Resource(name = "loginInfoSession")
-	LoginInfo loginInfo;
-	String errorMessage = "Edit failed!";
+	@ModelAttribute("loginInfo")
+	public LoginInfo addLoginInfo() {
+		System.out.println("LoginInfo @ModelAttribute");
+		return new LoginInfo();
+	}
+	private static String errorMessage = "Edit failed!";
 	
 	private class DetailedOrder{
 		public String id;
@@ -39,6 +45,7 @@ public class CustomerOrderController {
 	
 	@RequestMapping(value={"ordermanagement", "ordermanagement.html"})
     public String getCustomerOrderPage(Model model) {
+		LoginInfo loginInfo = (LoginInfo) model.getAttribute("loginInfo");
 		model.addAttribute("loginInfo", loginInfo);
 		if(loginInfo.islogin) {
 			System.out.println("CustomerOrderPage");
@@ -50,28 +57,20 @@ public class CustomerOrderController {
 	
 	@RequestMapping(path = "/GetAllOrder", produces = "application/json; charset=UTF-8")
     @ResponseBody
-    public List<DetailedOrder> getCustomerOrder(){
+    public List<DetailedOrder> getCustomerOrder(Model model){
+		LoginInfo loginInfo = (LoginInfo) model.getAttribute("loginInfo");
 		System.out.println("GetAllOrder");
     	List<Order> Orderlist = Global.db.getOrder(loginInfo.account.id);
     	System.out.println(Orderlist);
     	List<DetailedOrder> DetailedOrderlist = new ArrayList<DetailedOrder>();
-    	
-    	Trip tmp = new Trip();
-    	tmp.title = "《玩美加族》加勒比海展望號遊輪牙買加11日";
-    	tmp.travelCode = 43;
-    	tmp.price = 100;
-    	tmp.startDate = "2020-09-04";
-    	tmp.endDate = "2020-09-13";
-    	
-    	
 		
 		for(Order order: Orderlist) {
 		//for(int i = 0; i < Orderlist.size(); ++i) {
 			DetailedOrder detailedOrder = new DetailedOrder();
 			detailedOrder.id = order.id;
 			detailedOrder.quantity = order.quantity;
-			detailedOrder.trip = tmp;
-			detailedOrder.totalPrice = tmp.price * order.quantity;
+			detailedOrder.trip = Global.db.getTrip(order.tripID);;
+			detailedOrder.totalPrice = detailedOrder.trip.price * order.quantity;
 			DetailedOrderlist.add(detailedOrder);
 		}
 
@@ -82,10 +81,12 @@ public class CustomerOrderController {
     public ResponseEntity<?> getSearchResultViaAjax(
     		@Valid @RequestBody @RequestParam(required = true)  String id,
     		@Valid @RequestBody @RequestParam(required = false) String quantity,
-    		@Valid @RequestBody @RequestParam(required = false) String action) {
+    		@Valid @RequestBody @RequestParam(required = false) String action,
+    		Model model) {
 		System.out.println("editOrder");
         
         System.out.println(id + " " + quantity + " " + action);
+        LoginInfo loginInfo = (LoginInfo) model.getAttribute("loginInfo");
         List<Order> Orderlist = Global.db.getOrder(loginInfo.account.id);
         Order modifyOrder = null;
         for(Order order: Orderlist) {
@@ -99,9 +100,9 @@ public class CustomerOrderController {
         AjaxResponseBody result = new AjaxResponseBody();
         if(modifyOrder != null) {
             if(action.equals("delete"))
-            	status = deleteCustomerOrder(id);
+            	status = deleteCustomerOrder(id, loginInfo.account);
             else if(action.equals("edit"))
-            	status = modifyCustomerOrder(modifyOrder, quantity);
+            	status = modifyCustomerOrder(modifyOrder, quantity, loginInfo.account);
         }
         else
         	errorMessage = "Can not find corresponding order.";
@@ -116,11 +117,11 @@ public class CustomerOrderController {
         return ResponseEntity.ok(result);
 	} 
 
-    public boolean deleteCustomerOrder(String deleteOrderID){
-    	return Global.db.cancelOrder(loginInfo.account.id, deleteOrderID);
+    public boolean deleteCustomerOrder(String deleteOrderID, Account account){
+    	return Global.db.cancelOrder(account.id, deleteOrderID);
     }
     
-    public boolean modifyCustomerOrder(Order modifyOrder, String Quantity) {   //modify -> re getCustomer
+    public boolean modifyCustomerOrder(Order modifyOrder, String Quantity, Account account) {   //modify -> re getCustomer
     	
 		System.out.println(Quantity);
 		int inputQuantity;
@@ -137,11 +138,11 @@ public class CustomerOrderController {
 		tmp.lowerBound = 10;
     	tmp.upperBound = 30;
     	System.out.println(tmp.lowerBound + " " + tmp.upperBound + " " + inputQuantity);
-    	System.out.println(loginInfo.account.id);
+    	System.out.println(account.id);
     	System.out.println(modifyOrder.id);
 		
 		if(tmp.lowerBound + inputQuantity <= tmp.upperBound) // check inputQuantity range
-			return Global.db.modifyOrder(loginInfo.account.id, modifyOrder.id, inputQuantity);
+			return Global.db.modifyOrder(account.id, modifyOrder.id, inputQuantity);
 		else {
 			errorMessage = "Quantity range illegal. Legal quantity range: 0 ~ " + (tmp.upperBound - tmp.lowerBound);
 			System.out.println(errorMessage);

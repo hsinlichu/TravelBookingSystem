@@ -9,7 +9,7 @@
         <tr data-id="%(id)s">
             <td scope="row">%(id)s</td>
             <td>%(trip.title)s</td>
-            <td>%(trip.travelCode)s</td>
+            <td>%(trip.travelCodeName)s</td>
             <td>%(trip.startDate)s</td>
             <td>%(trip.endDate)s</td>
             <td>%(quantity)s</td>
