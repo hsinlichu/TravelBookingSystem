@@ -1,7 +1,7 @@
 package travel.booking.container;
 
 import org.springframework.context.annotation.Bean;
-
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,11 +12,12 @@ public class LoginInfo {
 	public Account account;
 	public String select_trip_id;
 	
-	@Bean
-	@SessionScope
-	public LoginInfo loginInfoSession() {
-	    return new LoginInfo();
-	}
+	/*
+	 * @Bean
+	 * 
+	 * @SessionScope public LoginInfo loginInfoSession() {
+	 * System.out.println("loginInfoSession!!!"); return new LoginInfo(); }
+	 */
 	
 	public Boolean getLoginStatus() {
 	    return this.islogin;

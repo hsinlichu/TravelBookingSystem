@@ -17,7 +17,7 @@ import travel.booking.container.*;
 
 @Controller
 public class InfoCheckController {     
-	@Resource(name = "loginInfoSession")
+	//@Resource(name = "loginInfoSession")
 	private LoginInfo loginInfo;
 	private int numofpeople;
 	
