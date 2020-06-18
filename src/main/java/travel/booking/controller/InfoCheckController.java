@@ -66,8 +66,9 @@ public class InfoCheckController {
     }
     
     private boolean bookComplete() {
-        // Place an order. Return true if success, false if failed. 
-    	return Global.db.addOrder(loginInfo.account.id, loginInfo.select_trip_id, numofpeople); 
+        // Place an order. Return true if success, false if failed.
+    	Response response = Global.db.addOrder(loginInfo.account.id, loginInfo.select_trip_id, numofpeople);
+    	return response.status.equals("OK"); 
     }
 
 }

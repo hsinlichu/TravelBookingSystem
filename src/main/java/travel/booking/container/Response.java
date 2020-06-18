@@ -13,4 +13,13 @@ public class Response extends Container implements Serializable{
 	public String status;
 	@SerializedName("message")
 	public String message;
+	
+	public Response(String status) {
+		this.status = status;
+	}
+	
+	public Response(String status, String message) {
+		this.status = status;
+		this.message = message;
+	}
 }

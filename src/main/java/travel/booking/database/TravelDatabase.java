@@ -12,10 +12,12 @@ import com.google.gson.annotations.SerializedName;
 import travel.booking.container.Order;
 import travel.booking.container.Account;
 import travel.booking.container.Trip;
+import travel.booking.container.Response;
 
 import java.util.*;
 
 import javax.swing.plaf.synth.Region;
+
 
 public class TravelDatabase extends Database {
 	private String dataDir;
@@ -198,11 +200,11 @@ public class TravelDatabase extends Database {
 		else return results.get(0).get("travel_code_name");
 	}
 	
-	public int getTripQuantity(String trip_id) {
+	public int getTripQuantity(String tripID) {
 		HashMap<String, String> attr = new HashMap<>();
-		attr.put("trip_id", trip_id);
+		attr.put("trip_id", tripID);
 		List<HashMap<String, String>> results = select("Order", attr);
-		if(results.size() == 0) return -1;
+		if(results.size() == 0) return 0;
 		int total = 0;
 		for(HashMap<String, String> result: results) {
 			total += Integer.parseInt(result.get("quantity"));
@@ -210,17 +212,45 @@ public class TravelDatabase extends Database {
 		return total;
 	}
 	
+	public int getRemainTripQuantity(String tripID) {
+		return getUpperBound(tripID) - getTripQuantity(tripID);
+	}
+	
+	public int getUpperBound(String tripID) {
+		HashMap<String, String> attr = new HashMap<>();
+		attr.put("trip_id", tripID);
+		List<HashMap<String, String>> results = select("Trip", attr);
+		if(results.size() == 0) return -1;
+		int upperBound = Integer.parseInt(results.get(0).get("upper_bound"));
+		return upperBound;
+	}
+	
+	public int getLowerBound(String tripID) {
+		HashMap<String, String> attr = new HashMap<>();
+		attr.put("trip_id", tripID);
+		List<HashMap<String, String>> results = select("Trip", attr);
+		if(results.size() == 0) return -1;
+		int lowerBound = Integer.parseInt(results.get(0).get("lower_bound"));
+		return lowerBound;
+	}
+	
 	/*********** Order ***************/
 	
-	public Boolean addOrder(String accountID, String tripID, int quantity){
+	public Response addOrder(String accountID, String tripID, int quantity){
 		// Add a new order 
 		HashMap<String, String> attr = new HashMap<>();
 		attr.put("order_id", UUID.randomUUID().toString());
 		attr.put("account_id", accountID);
 		attr.put("trip_id", tripID);
 		attr.put("quantity", Integer.toString(quantity));
-		this.insert("Order", attr);
-		return true;
+		int remainingSits = getRemainTripQuantity(tripID);
+		if(remainingSits < quantity) {
+			return new Response("Failed", "No remaining sits.");
+		}else {
+			insert("Order", attr);
+			return new Response("OK");
+		}
+		
 	}
 
 	public List<Order> getOrder(String account_id){
