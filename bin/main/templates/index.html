@@ -551,34 +551,13 @@
 		<script src="./js/main.js"></script>
 
         <script th:inline="javascript">
-                    /*<![CDATA[*/
-
+            /*<![CDATA[*/
             var msg =/*[[${msg}]]*/; 
             console.log(msg);
             if(msg != undefined){
                 console.log(msg);
                 alert(msg);
             }
-            if (msg == "0")
-                alert("Login Success!");
-            else if (msg == "1")
-                alert("Email or Password Incorrect!");
-            else if (msg == "2")
-                alert("Sign up success, you can login now!");
-            else if (msg == "3")
-                alert("Sign up failed, please try again!");
-            else if (msg == "4")
-                alert("Logout Success!");
-            else if (msg == "5")
-                alert("Logout failed, please try again!");
-            else if (msg == "6")
-                alert("Selected hotel is unavailable now, please try again!");
-            else if (msg == "7")
-                alert("Book Success!");
-            else if (msg == "8")
-                alert("Book Fail QQ");
-            else if (msg == "9")
-                alert(msg);
             /*]]>*/
         </script>
 

@@ -2,11 +2,7 @@ package travel.booking.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import travel.booking.Global;
@@ -37,23 +33,17 @@ public class OrderComfirmController {
 		if(bookCheck(selectTrip, numofpeople)){
 			model.addAttribute("trip", selectTrip);
 			model.addAttribute("numofpeople", numofpeople);
-			System.out.println("bookCheck yes");
 	        return "confirmation";    
 		}	   
 		else {
-			System.out.println("bookCheck no");
 		    redir.addFlashAttribute("msg", "Selected hotel is unavailable now, please try again!");
-			return "redirect:index"; // alert("Selected hotel is unavailable now, please try again!"); 
+			return "redirect:index";
 		}
 			
     }
 	
     public Boolean bookCheck(Trip trip, int numofpeople) {
-    	System.out.println("bookCheck: " + trip.lowerBound + " " + trip.upperBound);
-    	if(trip.lowerBound + numofpeople <= trip.upperBound)
-            return true;
-    	else
-    		return false;
+    	return (trip.lowerBound + numofpeople <= trip.upperBound);
     }
 
     @RequestMapping(value="/bookcomplete")

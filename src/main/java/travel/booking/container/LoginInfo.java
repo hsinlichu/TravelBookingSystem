@@ -1,8 +1,5 @@
 package travel.booking.container;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.context.annotation.Configuration;
 
 
@@ -11,12 +8,6 @@ public class LoginInfo {
 	public boolean islogin = false;
 	public Account account;
 	
-	/*
-	 * @Bean
-	 * 
-	 * @SessionScope public LoginInfo loginInfoSession() {
-	 * System.out.println("loginInfoSession!!!"); return new LoginInfo(); }
-	 */
 	public String toString() {
 		return islogin + " " + account;
 	}
