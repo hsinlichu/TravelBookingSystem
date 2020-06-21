@@ -25,7 +25,7 @@ public class TripDetailController {
 	}
 	
 	@RequestMapping(value={"trip.html", "trip"}, method=RequestMethod.GET, params = {"id"})
-    public String getDetailHotel(@RequestParam String id, Model model, HttpSession session) {
+    public String getDetailHotel(@RequestParam String id, Model model) {
     	System.out.println("trip.html id: " + id);
     	Trip trip = Global.db.getTrip(id);
     	model.addAttribute("trip", trip);

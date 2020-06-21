@@ -1,13 +1,5 @@
 package travel.booking.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
-import java.util.ArrayList;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import travel.booking.Global;
 import travel.booking.container.*;
@@ -30,18 +23,15 @@ public class OrderComfirmController {
 	}
 	
 	@RequestMapping(value="/confirmation", method=RequestMethod.POST)
-    public String infoCheck(@RequestParam int numofpeople, @RequestParam String travelid, Model model) {
+    public String infoCheck(@RequestParam int numofpeople, @RequestParam String travelid, Model model, RedirectAttributes redir) {
 		
 		LoginInfo loginInfo = (LoginInfo) model.getAttribute("loginInfo");
-		System.out.println("Confirmation: " + travelid);
-		System.out.println("Confirmation: " + loginInfo);
-		System.out.println("Confirmation: " + numofpeople);
+		System.out.println("Confirmation: " + travelid + " " + loginInfo + " " + numofpeople);
 		
 		Trip selectTrip = Global.db.getTrip(travelid);
-		System.out.println("Confirmation: " + travelid);
 		if(!loginInfo.getLoginStatus()) {
-			model.addAttribute("msg", 9);
-			return "index";
+			redir.addFlashAttribute("msg", "Selected hotel is unavailable now, please try again!");
+			return "redirect:index";
 		}
 		
 		if(bookCheck(selectTrip, numofpeople)){
@@ -51,9 +41,9 @@ public class OrderComfirmController {
 	        return "confirmation";    
 		}	   
 		else {
-			model.addAttribute("msg", 6);
 			System.out.println("bookCheck no");
-			return "index"; // alert("Selected hotel is unavailable now, please try again!"); 
+		    redir.addFlashAttribute("msg", "Selected hotel is unavailable now, please try again!");
+			return "redirect:index"; // alert("Selected hotel is unavailable now, please try again!"); 
 		}
 			
     }
@@ -67,32 +57,20 @@ public class OrderComfirmController {
     }
 
     @RequestMapping(value="/bookcomplete")
-    public String confirmOrder(Model model) {
-    	System.out.println("--- Model data ---");
-		Map modelMap = model.asMap();
-		for (Object modelKey : modelMap.keySet()) {
-			Object modelValue = modelMap.get(modelKey);
-			System.out.println(modelKey + " -- " + modelValue);
-		}
+    public String confirmOrder(Model model, RedirectAttributes redir) {
+		Utility.printModel(model);
+		
     	LoginInfo loginInfo = (LoginInfo) model.getAttribute("loginInfo");
     	Trip trip = (Trip) model.getAttribute("trip");
     	Integer numofpeople = (Integer) model.getAttribute("numofpeople");
     	
-    	System.out.println("bookcomplete: " + loginInfo);
-    	System.out.println("bookcomplete: " + numofpeople);
-    	System.out.println("bookcomplete: " + trip);
+    	System.out.println("bookcomplete: " + loginInfo + " " + numofpeople + " " + trip);
     	
-    	int msg;
-    	if(bookComplete(loginInfo.account, trip.id, numofpeople)) {
-    		msg = 7;
-    		System.out.println("Book Success");
-    	}
-    	else {
-    		msg = 8;
-    		System.out.println("Book Fail");
-    	}
-    	model.addAttribute("msg", msg);
-    	return "index";
+    	String msg = bookComplete(loginInfo.account, trip.id, numofpeople) ? "Book Success!" : "Book Fail QQ";
+    	System.out.println(msg);
+    	
+	    redir.addFlashAttribute("msg", msg);
+	    return "redirect:index";
     }
     
     private boolean bookComplete(Account account, String tripID, int numofpeople) {

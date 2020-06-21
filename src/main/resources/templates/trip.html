@@ -67,14 +67,11 @@
 								</div>
 							</div>
 							<div class="seach_icon">
-								<a href="#search_block"> <i class="fa fa-search"></i>
+								<a href="./index.html#search_block"> <i class="fa fa-search"></i>
 								</a>
 							</div>
-							<div class="login_icon" data-aos="fade"
-								th:if="${loginInfo.islogin} == False">
-								<a data-toggle="modal" data-target="#loginModal"> <i
-									class="fa fa-sign-in"></i>
-								</a>
+							<div class="login_icon" data-aos="fade" th:if="${loginInfo.islogin} == False">
+								<a data-toggle="modal" data-target="#loginModal"><i class="fa fa-sign-in"></i></a>
 							</div>
 							<div class="col-12">
 								<div class="mobile_menu d-block"
@@ -135,12 +132,7 @@
                         <h3>Book this trip now!</h3>
                         <form action="/confirmation" method="post">
                             <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="single_input">
-                                        <input type="text" id="travelid" name="travelid" th:value="${trip.id}" style="visibility:hidden">
-                                    </div>
-                                </div>
-
+                                
                                 <div class="col-lg-12">
                                     <div class="single_input">
                                         <input type="number" id="numofpeople" name="numofpeople" placeholder="Number of people" min="0" required>
@@ -149,10 +141,16 @@
                                 
                                 <div class="col-lg-12">
                                     <div class="submit_btn">
-                                        <button class="boxed-btn4" type="submit" th:if="${loginInfo.islogin} == False" disabled>Please Login First!</button>
+                                        <button class="boxed-btn4" type="submit" th:if="${loginInfo.islogin} == False"  data-toggle="modal" data-target="#loginModal">Please Login First!</button>
                                         <button class="boxed-btn4" type="submit" th:if="${loginInfo.islogin} == True">Reserve Now!</button>
                                     </div>
                                 </div>
+                                <div class="col-lg-12">
+                                    <div class="single_input">
+                                        <input type="text" id="travelid" name="travelid" th:value="${trip.id}" style="visibility:hidden">
+                                    </div>
+                                </div>
+
                             </div>
                         </form>
                     </div>

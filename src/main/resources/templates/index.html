@@ -32,31 +32,6 @@
 <link rel="stylesheet" href="./css/login.css">
 <!-- <link rel="stylesheet" href="./css/responsive.css"> -->
 
-
-<script type="text/javascript">
-	var msg = "[[${msg}]]";
-	console.log(msg);
-	if (msg == "0")
-		alert("Login Success!");
-	else if (msg == "1")
-		alert("Email or Password Incorrect!");
-	else if (msg == "2")
-		alert("Sign up success, you can login now!");
-	else if (msg == "3")
-		alert("Sign up failed, please try again!");
-	else if (msg == "4")
-		alert("Logout Success!");
-	else if (msg == "5")
-		alert("Logout failed, please try again!");
-	else if (msg == "6")
-		alert("Selected hotel is unavailable now, please try again!");
-	else if (msg == "7")
-		alert("Book Success!");
-	else if (msg == "8")
-		alert("Book Fail QQ");
-    else if (msg == "9")
-		alert("Something went wrong");
-</script>
 </head>
 
 <body>
@@ -141,12 +116,12 @@
 			<div class="row align-items-center">
 				<div class="col-lg-3">
 					<div class="form_area">
-						<h3>Relex yourself:</h3>
+						<h3>Relax yourself:</h3>
 					</div>
 				</div>
 				<div class="col-lg-9">
 					<div class="search_wrap">
-						<form class="search_form" action="/result" method="post">
+						<form class="search_form" action="/result" method="get">
 							<div class="input_field" style="width: 50%">
                                 <input type="text" placeholder="Travel destination" id="location" name="location" required>
 							</div>
@@ -574,14 +549,40 @@
 
 		<script src="./js/login.js"></script>
 		<script src="./js/main.js"></script>
-		<script>
-        $('#datepicker').datepicker({
-            iconsLibrary: 'fontawesome',
-            icons: {
-             rightIcon: '<span class="fa fa-caret-down"></span>'
-         }
-        });
-    </script>
+
+        <script th:inline="javascript">
+                    /*<![CDATA[*/
+
+            var msg =/*[[${msg}]]*/; 
+            console.log(msg);
+            if(msg != undefined){
+                console.log(msg);
+                alert(msg);
+            }
+            if (msg == "0")
+                alert("Login Success!");
+            else if (msg == "1")
+                alert("Email or Password Incorrect!");
+            else if (msg == "2")
+                alert("Sign up success, you can login now!");
+            else if (msg == "3")
+                alert("Sign up failed, please try again!");
+            else if (msg == "4")
+                alert("Logout Success!");
+            else if (msg == "5")
+                alert("Logout failed, please try again!");
+            else if (msg == "6")
+                alert("Selected hotel is unavailable now, please try again!");
+            else if (msg == "7")
+                alert("Book Success!");
+            else if (msg == "8")
+                alert("Book Fail QQ");
+            else if (msg == "9")
+                alert(msg);
+            /*]]>*/
+        </script>
+
+
 </body>
 
 </html>

@@ -3,23 +3,17 @@
  */
 package travel.booking.controller;
 
-import java.util.Enumeration;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import travel.booking.container.LoginInfo;
+import travel.booking.container.Utility;
 
-
-/**
- * @author root
- *
- */
 @Controller
 @SessionAttributes("loginInfo")
 public class HomePageController {
@@ -32,25 +26,15 @@ public class HomePageController {
 		return new LoginInfo();
 	}
 	
-	@RequestMapping(value={"", "/", "index.html", "index"}, method=RequestMethod.GET, params = {})
+	@RequestMapping(value={"", "/", "index.html", "index"})
     public String getHomePage(HttpSession session, Model model) {
-		System.out.println("--- Session data ---");
-		Enumeration<String> e = session.getAttributeNames();
-		  while (e.hasMoreElements()){
-			String s = e.nextElement();
-			System.out.println(s + " -> " + session.getAttribute(s));
-		  }
-		
-			/*
-			 * System.out.println("--- Model data ---"); Map modelMap = model.asMap(); for
-			 * (Object modelKey : modelMap.keySet()) { Object modelValue =
-			 * modelMap.get(modelKey); System.out.println(modelKey + " -- " + modelValue); }
-			 */
+		Utility.printSession(session);
+		Utility.printModel(model);
 		
     	System.out.println("Home Page");
     	//System.out.println("New Status: " + loginInfo.islogin);
     	
-    	Integer msg = (Integer) model.getAttribute("msg");
+    	String msg = (String) model.getAttribute("msg");
     	if(msg != null) {
     		System.out.println("Home Page MSG: " + msg);
     	    model.addAttribute("msg", msg); 

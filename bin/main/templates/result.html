@@ -169,6 +169,8 @@
                                 <div class="reset_btn">
                                     <button class="boxed-btn4" type="submit">Reset</button>
                                 </div>
+                                <input type="text" id="filter_location" name="location" th:value="${session.resultSetting.location}" style="visibility:hidden">
+                                <input type="text" id="filter_departure_date" name="departure_date" th:value="${session.resultSetting.departure_date}" style="visibility:hidden">
                             </form>
                         </div>
                     </div>
@@ -451,14 +453,7 @@
                 
                 <script src="js/main.js"></script>
                 <script src="js/login.js"></script>
-                <script>
-                    $('#datepicker').datepicker({
-                        iconsLibrary: 'fontawesome',
-                        icons: {
-                            rightIcon: '<span class="fa fa-caret-down"></span>'
-                        }
-                    });
-                </script>
+                
                 <script th:inline="javascript">
                     /*<![CDATA[*/
 

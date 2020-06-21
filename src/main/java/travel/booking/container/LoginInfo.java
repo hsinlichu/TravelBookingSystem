@@ -24,9 +24,15 @@ public class LoginInfo {
 	public Boolean getLoginStatus() {
 	    return this.islogin;
 	}
+	
 	public Boolean setLoginStatus(Boolean newStatus) {
 	    this.islogin = newStatus;
 	    return this.getLoginStatus();
+	}
+	
+	public void update(boolean islogin, Account account) {
+		this.islogin = islogin;
+		this.account = account;
 	}
 
 }

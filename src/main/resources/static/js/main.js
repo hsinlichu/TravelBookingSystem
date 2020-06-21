@@ -19,6 +19,21 @@ $(window).on('scroll', function () {
 
 
 $(document).ready(function(){
+var dateAndTime = function() {
+    $('#datepicker').datepicker({
+        minDate:0,  
+        startDate: '+0d',
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        iconsLibrary: 'fontawesome',
+        icons: {
+            rightIcon: '<span class="fa fa-caret-down"></span>'
+        }
+    });
+  };
+  dateAndTime();
+
+
 
 // mobile_menu
 var menu = $('ul#navigation');
