@@ -22,6 +22,7 @@ public class Application {
 		userA  = Global.db.verifyAccount("UserA@gmail.com", "aaa"); 
 		System.out.println(userA);
 		List<Trip> trips = Global.db.getTrip("美國", "2020-07-31");	
+		System.out.println(trips.get(0).remainSits);
 		System.out.println(trips);
 		System.out.println(Global.db.addOrder(userA.id, trips.get(0).id, 10));
 		List<Order> orders = Global.db.getOrder(userA.id);

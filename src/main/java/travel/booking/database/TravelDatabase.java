@@ -171,6 +171,7 @@ public class TravelDatabase extends Database {
 			String travelCodeName = getTripCodeName(tripMap.get("travel_code"));
 			//System.out.println(travelCodeName);
 			tripMap.put("travel_code_name", travelCodeName);
+			tripMap.put("remain_sits", String.valueOf(getRemainTripQuantity(tripMap.get("trip_id"))));
 			String jsonFormat = gson.toJson(tripMap);
 			Trip trip = gson.fromJson(jsonFormat, Trip.class);
 			trips.add(trip);
@@ -187,6 +188,7 @@ public class TravelDatabase extends Database {
 		HashMap<String, String> result = results.get(0);
 		String travelCodeName = getTripCodeName(result.get("travel_code"));
 		result.put("travel_code_name", travelCodeName);
+		result.put("remain_sits", String.valueOf(getRemainTripQuantity(tripID)));
 		String jsonFormat = gson.toJson(result);
 		Trip trip = gson.fromJson(jsonFormat, Trip.class);
 		return trip;

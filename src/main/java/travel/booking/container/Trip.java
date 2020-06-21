@@ -33,6 +33,8 @@ public class Trip extends Container implements Serializable, Comparator<Trip>{
 	public int lowerBound;
 	@SerializedName("upper_bound")
 	public int upperBound;
+	@SerializedName("remain_sits")
+	public int remainSits;
 	
 	public String toString() {
 		return id + " " + title + " " +  travelCode + " " +  travelCodeName + " " + productKey + " " + price + " " +  startDate + " " +  endDate + " " +  lowerBound + " " + upperBound;
