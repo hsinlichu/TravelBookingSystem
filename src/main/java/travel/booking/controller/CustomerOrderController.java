@@ -26,22 +26,37 @@ public class CustomerOrderController {
 		System.out.println("LoginInfo @ModelAttribute");
 		return new LoginInfo();
 	}
-	private static String errorMessage = "Edit failed!";
 
 	private class DetailedOrder{
-		private String id;
-		private Trip trip;
-		private int quantity;
-		private int totalPrice;
+		public String id;
+		public Trip trip;
+		public int quantity;
+		public int totalPrice;
+		
+		public DetailedOrder(Order order) {
+			this.id = order.id;
+			this.quantity = order.quantity;
+			this.trip = Global.db.getTrip(order.tripID);;
+			this.totalPrice = this.trip.price * order.quantity;
+		}
+	}
+	
+	private class Response{
+		public boolean status;
+		public String message;
+		
+		public Response(boolean status, String message) {
+			this.status = status;
+			this.message = message;
+		}
 	}
 
 	@RequestMapping(value={"ordermanagement", "ordermanagement.html"})
 	public String getCustomerOrderPage(Model model, RedirectAttributes redir) {
 		LoginInfo loginInfo = (LoginInfo) model.getAttribute("loginInfo");
 		model.addAttribute("loginInfo", loginInfo);
-		if(loginInfo.islogin) {
-			return "ordermanagement";  
-		}
+		if(loginInfo.islogin)
+			return "ordermanagement";
 		else {
 			redir.addFlashAttribute("msg", "Not login");
 			return "redirect:index";
@@ -58,11 +73,7 @@ public class CustomerOrderController {
 		List<DetailedOrder> DetailedOrderlist = new ArrayList<DetailedOrder>();
 
 		for(Order order: Orderlist) {
-			DetailedOrder detailedOrder = new DetailedOrder();
-			detailedOrder.id = order.id;
-			detailedOrder.quantity = order.quantity;
-			detailedOrder.trip = Global.db.getTrip(order.tripID);;
-			detailedOrder.totalPrice = detailedOrder.trip.price * order.quantity;
+			DetailedOrder detailedOrder = new DetailedOrder(order);
 			DetailedOrderlist.add(detailedOrder);
 		}
 
@@ -79,60 +90,56 @@ public class CustomerOrderController {
 		LoginInfo loginInfo = (LoginInfo) model.getAttribute("loginInfo");
 		List<Order> Orderlist = Global.db.getOrder(loginInfo.account.id);
 		Order modifyOrder = null;
-		for(Order order: Orderlist) {
-			System.out.println(order);
+		for(Order order: Orderlist)
 			if(order.id.equals(id)) {
 				modifyOrder = order;
 				break;
 			}
-		}
-		boolean status = false;
+		
 		AjaxResponseBody result = new AjaxResponseBody();
+		Response response = null;
 		if(modifyOrder != null) {
 			if(action.equals("delete"))
-				status = deleteCustomerOrder(id, loginInfo.account);
+				response = deleteCustomerOrder(id, loginInfo.account);
 			else if(action.equals("edit"))
-				status = modifyCustomerOrder(modifyOrder, quantity, loginInfo.account);
+				response = modifyCustomerOrder(modifyOrder, quantity, loginInfo.account);
 		}
 		else
-			errorMessage = "Can not find corresponding order.";
+			response = new Response(false, "Can not find corresponding order.");
 
-		if(status) 
+		if(response.status) 
 			result.setMsg("Edit successfully!");
 		else
-			result.setMsg(errorMessage);
+			result.setMsg(response.message);
 
 		//If error, just return a 400 bad request, along with the error message
 		//return ResponseEntity.badRequest().body(result);
 		return ResponseEntity.ok(result);
 	} 
 
-	public boolean deleteCustomerOrder(String deleteOrderID, Account account){
-		return Global.db.cancelOrder(account.id, deleteOrderID);
+	public Response deleteCustomerOrder(String deleteOrderID, Account account){
+		return new Response(Global.db.cancelOrder(account.id, deleteOrderID), null);
 	}
 
-	public boolean modifyCustomerOrder(Order modifyOrder, String Quantity, Account account) {   //modify -> re getCustomer
+	public Response modifyCustomerOrder(Order modifyOrder, String Quantity, Account account) {   //modify -> re getCustomer
 
-		System.out.println(Quantity);
+		System.out.println(modifyOrder + Quantity);
 		int inputQuantity;
 		try {
 			inputQuantity = Integer.parseInt(Quantity);
 		}
 		catch(Exception e) {
-			errorMessage = "Can not parse input quantity to int";
-			return false;
+			return new Response(false, "Quantity format invalid");
 		}
 		System.out.println("parse success");
 
-		Trip trip = Global.db.getTrip(modifyOrder.id);
+		Trip trip = Global.db.getTrip(modifyOrder.tripID);
 
-		if(trip.lowerBound + inputQuantity <= trip.upperBound) // check inputQuantity range
-			return Global.db.modifyOrder(account.id, modifyOrder.id, inputQuantity);
-		else {
-			errorMessage = "Modify Quantity illegal. Only remain: " + (trip.upperBound - trip.lowerBound);
-			System.out.println(errorMessage);
-			return false;
-		} 	
+		if(inputQuantity <= trip.remainSits && inputQuantity > 0) // check inputQuantity range
+			return new Response(Global.db.modifyOrder(account.id, modifyOrder.id, inputQuantity), null);
+		else
+			return new Response(false, "Modify Quantity illegal. Only remain: " + trip.remainSits);
+		
 	}
 }
 

@@ -43,7 +43,7 @@ public class OrderComfirmController {
     }
 	
     public Boolean bookCheck(Trip trip, int numofpeople) {
-    	return (trip.lowerBound + numofpeople <= trip.upperBound);
+    	return (numofpeople <= trip.remainSits);
     }
 
     @RequestMapping(value="/bookcomplete")

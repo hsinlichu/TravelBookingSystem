@@ -66,7 +66,13 @@ public class ResultPageController {
 		ResultSetting resultSetting = (ResultSetting) model.getAttribute("resultSetting");
 		System.out.println("resultSetting" + resultSetting);
 		try {
-			FormatChecker.parse(departure_date);
+			FormatChecker.setLenient(false);
+			Date select = FormatChecker.parse(departure_date);
+			Date now = new Date();
+			if(!select.after(now)) {
+				redir.addFlashAttribute("msg", "Departure date should at least after today.");
+				return "redirect:index";
+			}
 			resultSetting.departure_date = departure_date;
 			System.out.println("departure_date: " + departure_date);
 		} catch (ParseException e) {
@@ -85,25 +91,35 @@ public class ResultPageController {
 		}
 
 		if(sortMethod != null) {
-			System.out.println("Change sortMethod");
-			resultSetting.sortMethod = SortMethod.valueOf(sortMethod);
+			try {
+				System.out.println("Change sortMethod");
+				resultSetting.sortMethod = SortMethod.valueOf(sortMethod);
+			} catch (Exception e) {
+				redir.addFlashAttribute("msg", "sortMethod Invalid");
+				return "redirect:index";
+			}
 		}
 		if(amount != null) {
 			String[] show_range = amount.replace("$", "").split(" - ");
-			int show_price_from = Integer.parseInt(show_range[0]);
-			int show_price_to = Integer.parseInt(show_range[1]);
 
-
-			if (resultSetting.show_price_from > show_price_to) {
-				resultSetting.show_price_from = resultSetting.price_from;
-				resultSetting.show_price_to = resultSetting.price_to;
-				System.out.println("filter range illegal");
+			try {
+				int show_price_from = Integer.parseInt(show_range[0]);
+				int show_price_to = Integer.parseInt(show_range[1]);
+				
+				if (resultSetting.show_price_from > show_price_to) {
+					resultSetting.show_price_from = resultSetting.price_from;
+					resultSetting.show_price_to = resultSetting.price_to;
+					System.out.println("filter range illegal");
+				}
+				else {
+					resultSetting.show_price_from = show_price_from;
+					resultSetting.show_price_to = show_price_to;
+				}	
+				System.out.println("Change amount");
+			} catch (Exception e) {
+				redir.addFlashAttribute("msg", "amount Invalid");
+				return "redirect:index";
 			}
-			else {
-				resultSetting.show_price_from = show_price_from;
-				resultSetting.show_price_to = show_price_to;
-			}	
-			System.out.println("Change amount");
 		}
 		else {
 			resultSetting.show_price_from = resultSetting.price_from;

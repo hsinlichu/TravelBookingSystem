@@ -13,6 +13,7 @@
             <td>%(trip.startDate)s</td>
             <td>%(trip.endDate)s</td>
             <td>%(quantity)s</td>
+            <td>%(trip.remainSits)s</td>
             <td>%(totalPrice)s</td>
         </tr>
         `;

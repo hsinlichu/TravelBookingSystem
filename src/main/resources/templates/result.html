@@ -58,8 +58,6 @@
                                                 <h3 th:if="${session.loginInfo.islogin} == True">Welcome <span style="color:#1EC6B6" th:text="${session.loginInfo.account.name}">James Chu</span></h3>
                                                 <li><a class="active" href="./index.html">home</a></li>
                                                 <li><a href="/ordermanagement.html">Manage My Order</a></li>
-                                                <li><a href="/hotelmanagement.html">Manage My hotel</a></li>
-                                                <li><a href="/hotelordermanagement.html">Manage My hotel Order</a></li>
                                                 <li><a href="/signout">Sign Out</a></li>
                                             </ul>
                                         </nav>
@@ -154,7 +152,7 @@
                                         </div>
                                         <div class="col-lg-12">
                                             <div class="range_slider_wrap">
-                                                <span class="range">Prise range</span>
+                                                <span class="range">Price range</span>
                                                 <div id="slider-range"></div>
                                                 <p>
                                                 <input type="text" id="amount" name="amount" readonly style="border:0; color:#7A838B; font-weight:400;">
@@ -167,7 +165,7 @@
                                 </div>
 
                                 <div class="reset_btn">
-                                    <button class="boxed-btn4" type="submit">Reset</button>
+                                    <button class="boxed-btn4" type="submit">Filter & Sort</button>
                                 </div>
                                 <input type="text" id="filter_location" name="location" th:value="${session.resultSetting.location}" style="visibility:hidden">
                                 <input type="text" id="filter_departure_date" name="departure_date" th:value="${session.resultSetting.departure_date}" style="visibility:hidden">

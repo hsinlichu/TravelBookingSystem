@@ -25,6 +25,5 @@ public class LoginInfo {
 		this.islogin = islogin;
 		this.account = account;
 	}
-
 }
 

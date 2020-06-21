@@ -59,16 +59,13 @@
                                             <h3 th:if="${loginInfo.islogin} == True">Welcome <span style="color:#1EC6B6" th:text="${loginInfo.account.name}">James Chu</span></h3>
 											<li><a class="active" href="./index.html">home</a></li>
                                             <li><a href="/ordermanagement.html">Manage My Order</a></li>
-                                            <li><a href="/hotelmanagement.html">Manage My hotel</a></li>
-                                            <li><a href="/hotelordermanagement.html">Manage My hotel Order</a></li>
                                             <li><a href="/signout">Sign Out</a></li>
 										</ul>
 									</nav>
 								</div>
 							</div>
 							<div class="seach_icon">
-								<a href="#search_block"> <i class="fa fa-search"></i>
-								</a>
+								<a href="./index.html#search_block"><i class="fa fa-search"></i></a>
 							</div>
 							<div class="login_icon" data-aos="fade"
 								th:if="${loginInfo.islogin} == False">
@@ -115,12 +112,14 @@
                                     <th scope="col">Start Date</th>
                                     <th scope="col">End Date</th>
                                     <th scope="col">Book Quantity</th>
+                                    <th scope="col">Remaining Quantity</th>
                                     <th scope="col">Total price</th>
                                 </tr>
                             </thead>
                             <tbody id="ordertable">
                                 <tr>
                                     <th scope="row">Loading...</th>
+                                    <td>Loading...</td>
                                     <td>Loading...</td>
                                     <td>Loading...</td>
                                     <td>Loading...</td>

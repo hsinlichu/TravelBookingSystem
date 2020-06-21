@@ -21,7 +21,7 @@
                     <p>%(travelCodeName)s</p>
                     <span>Start date: %(startDate)s</span></br>
                     <span>End date: %(endDate)s</span></br>
-                    <span>Remained sit: TBA</span></br>
+                    <span>Remained sit: %(remainSits)s</span></br>
 
                     <div class="rating_days d-flex justify-content-between">
                         <div class="days">

@@ -64,8 +64,6 @@
                                             <h3 th:if="${loginInfo.islogin} == True">Welcome <span style="color:#1EC6B6" th:text="${session.loginInfo.account.name}">James Chu</span></h3>
 											<li><a class="active" href="./index.html">home</a></li>
                                             <li><a href="/ordermanagement.html">Manage My Order</a></li>
-                                            <li><a href="/hotelmanagement.html">Manage My hotel</a></li>
-                                            <li><a href="/hotelordermanagement.html">Manage My hotel Order</a></li>
                                             <li><a href="/signout">Sign Out</a></li>
 										</ul>
 									</nav>
@@ -152,14 +150,6 @@
                                         <input type="number" class="single-input" id="numofpeople" name="numofpeople" th:value="${numofpeople}" disabled>
                                     </div>
                                 </div>
-                                <!--
-                                    <div class="col-lg-12">
-                                    <div class="single_input">
-                                    <textarea name="" id="" cols="30" rows="10" placeholder="Message" ></textarea>
-                                    </div>
-                                    </div>
-                                -->
-
                             </div>
                             <div class="row mt-5">
                                 <div class="col-lg-6 d-flex justify-content-center">

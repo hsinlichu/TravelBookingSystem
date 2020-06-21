@@ -37,7 +37,7 @@ public class Trip extends Container implements Serializable, Comparator<Trip>{
 	public int remainSits;
 	
 	public String toString() {
-		return id + " " + title + " " +  travelCode + " " +  travelCodeName + " " + productKey + " " + price + " " +  startDate + " " +  endDate + " " +  lowerBound + " " + upperBound;
+		return id + " " + title + " " +  travelCode + " " +  travelCodeName + " " + productKey + " " + price + " " +  startDate + " " +  endDate + " " +  lowerBound + " " + upperBound + " " + remainSits;
 	}
 	
 	
