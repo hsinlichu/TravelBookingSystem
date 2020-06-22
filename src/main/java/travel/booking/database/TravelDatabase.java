@@ -20,6 +20,8 @@ import javax.swing.plaf.synth.Region;
 
 
 public class TravelDatabase extends Database {
+	// The class that contains operation of travel application that modify the database.
+	// This class is derived from the Database class, so it has the basic operation of database. 
 	private String dataDir;
 	private Gson gson;
 
@@ -63,6 +65,7 @@ public class TravelDatabase extends Database {
 	}
 
 	private List<HashMap<String, String>> read_trips(String dataPath){
+		// Read the trip files that the TA provided
 		try {
 			InputStreamReader isr = new InputStreamReader(new FileInputStream(dataPath)); 
 			BufferedReader reader = new BufferedReader(isr);
@@ -90,6 +93,7 @@ public class TravelDatabase extends Database {
 
 	/************* Account ***************/
 	public Account addAccount(String name, String email, String password){
+		// Add an account row in the account table
 		HashMap<String, String> attr = new HashMap<>();
 		String uuid = UUID.randomUUID().toString();
 		attr.put("account_id", uuid);
@@ -101,6 +105,7 @@ public class TravelDatabase extends Database {
 	}
 	
 	public Account updateAccount(Account account, String name, String email, String password){
+		// modify the account information 
 		// addAccount will fail if account with same email has existed.
 		// todo: return Account 
 		HashMap<String, String> attr = new HashMap<>();
@@ -114,6 +119,7 @@ public class TravelDatabase extends Database {
 	}
 
 	public Account getAccount(String account_id){
+		// Get the account information by the account_id
 		List<Account> accounts = new ArrayList<Account>();
 		HashMap<String, String> attr = new HashMap<>();
 		attr.put("account_id", account_id);
@@ -130,6 +136,7 @@ public class TravelDatabase extends Database {
 	}
 
 	public Account verifyAccount(String email, String password){
+		// Verify the account by its email password. 
 		HashMap<String, String> attr = new HashMap<>();
 		attr.put("email", email);
 		attr.put("password", hashPassword(password));
@@ -140,6 +147,7 @@ public class TravelDatabase extends Database {
 	
 	/************* Trip ***************/
 	public List<Trip> getTrip(String region, String startDate) {
+		// get the list of trips by the region and the startDate.
 		HashMap<String, String> attr;
 		List<HashMap<String, String>> traveCodes = new ArrayList<>();
 		if(region != null) {
@@ -181,6 +189,7 @@ public class TravelDatabase extends Database {
 	}
 	
 	public Trip getTrip(String tripID){
+		// Get the trip by the trip ID 
 		HashMap<String, String> attr = new HashMap<>();
 		attr.put("trip_id", tripID);
 		List<HashMap<String, String>> results = select("Trip", attr);
@@ -195,6 +204,7 @@ public class TravelDatabase extends Database {
 	}
 	
 	public String getTripCodeName(String travelCode) {
+		// get the tripCodeName by the travelCode
 		HashMap<String, String> attr = new HashMap<>();
 		attr.put("travel_code", travelCode);
 		List<HashMap<String, String>> results = select("TravelCode", attr);
@@ -203,6 +213,7 @@ public class TravelDatabase extends Database {
 	}
 	
 	public int getTripQuantity(String tripID) {
+		// Get the order quantity of a trip .
 		HashMap<String, String> attr = new HashMap<>();
 		attr.put("trip_id", tripID);
 		List<HashMap<String, String>> results = select("Order", attr);
@@ -215,10 +226,12 @@ public class TravelDatabase extends Database {
 	}
 	
 	public int getRemainTripQuantity(String tripID) {
+		// Get the remaining trip Quantity.
 		return getUpperBound(tripID) - getTripQuantity(tripID);
 	}
 	
 	public int getUpperBound(String tripID) {
+		// get the UpperBound of a trip 
 		HashMap<String, String> attr = new HashMap<>();
 		attr.put("trip_id", tripID);
 		List<HashMap<String, String>> results = select("Trip", attr);
@@ -228,6 +241,7 @@ public class TravelDatabase extends Database {
 	}
 	
 	public int getLowerBound(String tripID) {
+		// Get the lower bound of a trip
 		HashMap<String, String> attr = new HashMap<>();
 		attr.put("trip_id", tripID);
 		List<HashMap<String, String>> results = select("Trip", attr);
@@ -268,6 +282,7 @@ public class TravelDatabase extends Database {
 	}
 	
 	public boolean modifyOrder(String accountID, String orderID, int quantity) {
+		// modify the information of an order. 
 		HashMap<String, String> attr, cond_attr;
 		List<HashMap<String, String>> results;
 		attr = new HashMap<String, String>();
@@ -282,6 +297,7 @@ public class TravelDatabase extends Database {
 	}
 	
 	public boolean cancelOrder(String accountID, String orderID) {
+		// Cancel the order by  removing the row in the Order table
 		HashMap<String, String> attr;
 		List<HashMap<String, String>> results;
 		attr = new HashMap<String, String>();
@@ -296,7 +312,7 @@ public class TravelDatabase extends Database {
 }
  
 class JsonTravelCode{
-
+	// The helper class for reading the json file TA provided. 
 	@SerializedName("travel_code")
 	public String travelCode; 
 
