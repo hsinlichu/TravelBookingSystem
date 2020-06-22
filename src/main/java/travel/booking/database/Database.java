@@ -6,6 +6,7 @@ import java.sql.*;
 import java.security.MessageDigest;
 
 public class Database {
+	// This class contains the basic functions for doing SQL operations. 
 	private String dbPath;
 	private String initSQLPath;
 	public Database(String dbPath, String initSQLPath){
@@ -31,6 +32,7 @@ public class Database {
 	}
 
 	protected void initDB(){
+		// Init the database by an init SQL file.
 	    try{	
 	    	File f = new File(this.initSQLPath);
 	    	Scanner s = new Scanner(f);
@@ -58,7 +60,7 @@ public class Database {
 
 
 	protected Connection connect(){
-
+		// Connect to the Database
 		Connection conn = null;
 		
 		try {
