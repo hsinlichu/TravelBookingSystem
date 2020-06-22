@@ -3,6 +3,10 @@ package travel.booking.container;
 import org.springframework.context.annotation.Configuration;
 
 
+/**
+ * @author james
+ * LoginInfo corresponding to user information
+ */
 @Configuration
 public class LoginInfo {
 	public boolean islogin = false;

@@ -2,6 +2,7 @@ package travel.booking.controller;
 
 import org.springframework.stereotype.Controller;
 
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,27 +10,37 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
-
-import java.util.Enumeration;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
 
 import travel.booking.Global;
 import travel.booking.container.Account;
 import travel.booking.container.LoginInfo;
 import travel.booking.container.Utility;
 
+/**
+ * @author jameschu
+ * This controller is responsible for login functionality
+ */
 @Controller
 @SessionAttributes({"loginInfo"})
 public class LoginController {
+	/**
+	 * This function will create a new LoginInfo class if not exist(Session Singleton).
+	 * @return: LoginInfo object
+	 */
 	@ModelAttribute("loginInfo")
 	public LoginInfo addLoginInfo() {
 		System.out.println("LoginInfo @ModelAttribute");
 		return new LoginInfo();
 	}
 	
+	/**
+	 * @param email
+	 * @param passwd
+	 * @param model
+	 * @param redir
+	 * @return
+	 * login from existing accout
+	 */
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	public String getLogin(@RequestParam String email, @RequestParam String passwd, Model model, RedirectAttributes redir) {
 		Utility.printModel(model);
@@ -54,6 +65,16 @@ public class LoginController {
 	    return "redirect:index";
     }
 	
+	/**
+	 * @param firstname
+	 * @param lastname
+	 * @param email
+	 * @param passwd
+	 * @param model
+	 * @param redir
+	 * @return
+	 * create a new account and return to homepage
+	 */
 	@RequestMapping(value="/signup", method=RequestMethod.POST)
 	public String getLogin(
 			@RequestParam String firstname, @RequestParam String lastname, 
@@ -70,6 +91,12 @@ public class LoginController {
 	    return "redirect:index";
     }
 	
+	/**
+	 * @param model
+	 * @param redir
+	 * @return
+	 * logout user form the system and return to homepage
+	 */
 	@RequestMapping(value="/signout", method=RequestMethod.GET)
 	public String logout(Model model, RedirectAttributes redir) {
 		System.out.println("try logout");

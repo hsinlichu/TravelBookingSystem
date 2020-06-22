@@ -17,52 +17,86 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
-
+/**
+ * @author jameschu
+ * This controller is responsible for customer order management page
+ */
 @Controller
 @SessionAttributes("loginInfo")
-public class CustomerOrderController {         
+public class CustomerOrderController {  
+	/**
+	 * This function will create a new LoginInfo class if not exist(Session Singleton).
+	 * @return: LoginInfo object
+	 */
 	@ModelAttribute("loginInfo")
 	public LoginInfo addLoginInfo() {
 		System.out.println("LoginInfo @ModelAttribute");
 		return new LoginInfo();
 	}
 
-	private class DetailedOrder{
-		public String id;
-		public Trip trip;
-		public int quantity;
-		public int totalPrice;
-		
+	/**
+	 * @author jameschu
+	 * This inner-class store order information after calculation
+	 */
+	private class DetailedOrder {
+		public String id;      // order ID
+		public Trip trip;      // trip in this order
+		public int quantity;   // order quantity in this order 
+		public int totalPrice; // quantity * trip price
+
+		/**
+		 * @param order
+		 * Conver order class object information to DetailedOrder class object
+		 */
 		public DetailedOrder(Order order) {
 			this.id = order.id;
 			this.quantity = order.quantity;
-			this.trip = Global.db.getTrip(order.tripID);;
+			this.trip = Global.db.getTrip(order.tripID);
 			this.totalPrice = this.trip.price * order.quantity;
 		}
 	}
 	
+	/**
+	 * @author jameschu
+	 * This inner-class will return status and message from modifying DB
+	 */
 	private class Response{
 		public boolean status;
 		public String message;
 		
+		/**
+		 * @param status: true->success; false->fail
+		 * @param message
+		 */
 		public Response(boolean status, String message) {
 			this.status = status;
 			this.message = message;
 		}
 	}
 
+	/**
+	 * @param model
+	 * @param redir
+	 * @return
+	 * This function will return customer order management page
+	 */
 	@RequestMapping(value={"ordermanagement", "ordermanagement.html"})
 	public String getCustomerOrderPage(Model model, RedirectAttributes redir) {
 		LoginInfo loginInfo = (LoginInfo) model.getAttribute("loginInfo");
 		model.addAttribute("loginInfo", loginInfo);
 		if(loginInfo.islogin)
 			return "ordermanagement";
-		else {
+		else { // if not login, return to homepage and show error message
 			redir.addFlashAttribute("msg", "Not login");
 			return "redirect:index";
 		}           
 	}
 
+	/**
+	 * @param model
+	 * @return
+	 * This function will return all the order object corresponging to this user
+	 */
 	@RequestMapping(path = "/GetAllOrder", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public List<DetailedOrder> getCustomerOrder(Model model){
@@ -72,7 +106,7 @@ public class CustomerOrderController {
 		System.out.println(Orderlist);
 		List<DetailedOrder> DetailedOrderlist = new ArrayList<DetailedOrder>();
 
-		for(Order order: Orderlist) {
+		for(Order order: Orderlist) { // convert normal oder object to detailed order
 			DetailedOrder detailedOrder = new DetailedOrder(order);
 			DetailedOrderlist.add(detailedOrder);
 		}
@@ -80,6 +114,14 @@ public class CustomerOrderController {
 		return DetailedOrderlist;
 	}
 
+	/**
+	 * @param id
+	 * @param quantity
+	 * @param action
+	 * @param model
+	 * @return
+	 * This function will modify DB according to user command
+	 */
 	@RequestMapping(value="/editOrder", method=RequestMethod.POST)
 	public ResponseEntity<?> getSearchResultViaAjax(
 			@Valid @RequestBody @RequestParam(required = true)  String id,
@@ -89,7 +131,8 @@ public class CustomerOrderController {
 		System.out.println("editOrder" + id + " " + quantity + " " + action);
 		LoginInfo loginInfo = (LoginInfo) model.getAttribute("loginInfo");
 		List<Order> Orderlist = Global.db.getOrder(loginInfo.account.id);
-		Order modifyOrder = null;
+		
+		Order modifyOrder = null; // find the order that was modified
 		for(Order order: Orderlist)
 			if(order.id.equals(id)) {
 				modifyOrder = order;
@@ -108,7 +151,6 @@ public class CustomerOrderController {
 					response = new Response(false, e.getMessage());					
 				}
 			}
-				
 		}
 		else
 			response = new Response(false, "Can not find corresponding order.");
@@ -123,10 +165,24 @@ public class CustomerOrderController {
 		return ResponseEntity.ok(result);
 	} 
 
+	/**
+	 * @param deleteOrderID
+	 * @param account
+	 * @return
+	 * This function will delete customer order
+	 */
 	public Response deleteCustomerOrder(String deleteOrderID, Account account){
 		return new Response(Global.db.cancelOrder(account.id, deleteOrderID), null);
 	}
 
+	/**
+	 * @param modifyOrder
+	 * @param Quantity
+	 * @param account
+	 * @return
+	 * @throws Edit_Exception
+	 * This function will modified customer order according to legal user input 
+	 */
 	public Response modifyCustomerOrder(Order modifyOrder, String Quantity, Account account) throws Edit_Exception {   //modify -> re getCustomer
 
 		System.out.println(modifyOrder + Quantity);

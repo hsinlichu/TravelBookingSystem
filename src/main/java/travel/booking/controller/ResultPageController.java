@@ -14,20 +14,36 @@ import travel.booking.container.*;
 
 import java.text.*;
 
+/**
+ * @author jameschu
+ * This controller is responsible for homepage(index.html)
+ */
 @Controller
 @SessionAttributes({"resultSetting", "loginInfo"})
 public class ResultPageController {
+	/**
+	 * This function will create a new LoginInfo class if not exist(Session Singleton).
+	 * @return: LoginInfo object
+	 */
 	@ModelAttribute("loginInfo")
 	public LoginInfo addLoginInfo() {
 		System.out.println("LoginInfo @ModelAttribute");
 		return new LoginInfo();
 	}
+	/**
+	 * This function will create a new ResultSetting class if not exist(Session Singleton).
+	 * @return: ResultSetting object
+	 */
 	@ModelAttribute("resultSetting")
 	public ResultSetting addResultSetting() {
 		System.out.println("result @ModelAttribute");
 		return new ResultSetting();
 	}
 
+	/**
+	 * @author jameschu
+	 * This inner-class will store the information needed displaying on the view
+	 */
 	private class ResultSetting {
 		public String departure_date;
 		public String location;
@@ -44,12 +60,27 @@ public class ResultPageController {
 
 	}
 
+	/**
+	 * @author jameschu
+	 * corresponding sort method
+	 */
 	private enum SortMethod {
 		PriceHigh2Low, PriceLow2High, DateRecent2Far, DateFar2Recent
 	}
 
-	private static SimpleDateFormat FormatChecker = new SimpleDateFormat("yyyy-MM-dd");
+	private static SimpleDateFormat FormatChecker = new SimpleDateFormat("yyyy-MM-dd"); // check if the request date is legal
 
+	/**
+	 * @param location
+	 * @param departure_date
+	 * @param sortMethod
+	 * @param amount
+	 * @param model
+	 * @param session
+	 * @param redir
+	 * @return
+	 * return the Resultpage according to user search input
+	 */
 	@RequestMapping(value = { "/result.html", "result" }, method = RequestMethod.GET)
 	public String getResult(
 			@RequestParam String location, @RequestParam String departure_date,
@@ -62,7 +93,7 @@ public class ResultPageController {
 
 		ResultSetting resultSetting = (ResultSetting) model.getAttribute("resultSetting");
 		System.out.println("resultSetting" + resultSetting);
-		try {
+		try { // check if the date is legal
 			FormatChecker.setLenient(false);
 			Date select = FormatChecker.parse(departure_date);
 			Date now = new Date();
@@ -77,7 +108,8 @@ public class ResultPageController {
 			return "redirect:index";
 		}
 		resultSetting.location = location;
-
+		
+		// get the upper bound and lower bound price of this search
 		System.out.println("GetTrip");
 		resultSetting.tripList = Global.db.getTrip(resultSetting.location, resultSetting.departure_date);
 		for (Trip t : resultSetting.tripList) {
@@ -87,6 +119,7 @@ public class ResultPageController {
 				resultSetting.price_to = t.price;
 		}
 
+		// modify sort method
 		if(sortMethod != null) {
 			try {
 				System.out.println("Change sortMethod");
@@ -96,6 +129,8 @@ public class ResultPageController {
 				return "redirect:index";
 			}
 		}
+		
+		// modify showing range
 		if(amount != null) {
 			String[] show_range = amount.replace("$", "").split(" - ");
 
@@ -127,6 +162,12 @@ public class ResultPageController {
 		return "result";
 	}
 
+	/**
+	 * @param model
+	 * @param session
+	 * @return
+	 * return the ResultSetting object to view
+	 */
 	@RequestMapping(path = "/GetAllTrip", produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public List<Trip> GetAllHotel(Model model, HttpSession session) {
