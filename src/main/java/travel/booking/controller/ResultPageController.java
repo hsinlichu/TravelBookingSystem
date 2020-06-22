@@ -38,9 +38,6 @@ public class ResultPageController {
 		public SortMethod sortMethod = SortMethod.PriceHigh2Low;
 		public List<Trip> tripList = null;
 
-		public ResultSetting() {
-		}
-
 		public String toString() {
 			return departure_date + " " + location + " " +  price_from + " " +  price_to + " " + show_price_from + " " + show_price_to + " " +  sortMethod;
 		}

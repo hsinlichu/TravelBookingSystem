@@ -101,8 +101,14 @@ public class CustomerOrderController {
 		if(modifyOrder != null) {
 			if(action.equals("delete"))
 				response = deleteCustomerOrder(id, loginInfo.account);
-			else if(action.equals("edit"))
-				response = modifyCustomerOrder(modifyOrder, quantity, loginInfo.account);
+			else if(action.equals("edit")) {
+				try {
+					response = modifyCustomerOrder(modifyOrder, quantity, loginInfo.account);
+				} catch(Edit_Exception e) {
+					response = new Response(false, e.getMessage());					
+				}
+			}
+				
 		}
 		else
 			response = new Response(false, "Can not find corresponding order.");
@@ -121,7 +127,7 @@ public class CustomerOrderController {
 		return new Response(Global.db.cancelOrder(account.id, deleteOrderID), null);
 	}
 
-	public Response modifyCustomerOrder(Order modifyOrder, String Quantity, Account account) {   //modify -> re getCustomer
+	public Response modifyCustomerOrder(Order modifyOrder, String Quantity, Account account) throws Edit_Exception {   //modify -> re getCustomer
 
 		System.out.println(modifyOrder + Quantity);
 		int inputQuantity;
@@ -135,10 +141,10 @@ public class CustomerOrderController {
 
 		Trip trip = Global.db.getTrip(modifyOrder.tripID);
 
-		if(inputQuantity <= trip.remainSits && inputQuantity > 0) // check inputQuantity range
+		if(inputQuantity <= trip.remainSits + modifyOrder.quantity && inputQuantity > 0) // check inputQuantity range
 			return new Response(Global.db.modifyOrder(account.id, modifyOrder.id, inputQuantity), null);
 		else
-			return new Response(false, "Modify Quantity illegal. Only remain: " + trip.remainSits);
+			throw new Edit_Exception("Modify Quantity illegal. You can other up to: " + (modifyOrder.quantity + trip.remainSits));
 		
 	}
 }
