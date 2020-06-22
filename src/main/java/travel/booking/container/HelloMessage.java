@@ -1,5 +1,9 @@
 package travel.booking.container;
 
+/**
+ * @author jameschu
+ * store sever sent event content
+ */
 public class HelloMessage {
 	private String name;
 

@@ -378,6 +378,9 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"> </script> -->
     <!-- JS here -->
+    
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script src="js/vendor/modernizr-3.5.0.min.js"></script>
     <script src="js/vendor/jquery-1.12.4.min.js"></script>
     <script src="js/popper.min.js"></script>
@@ -410,14 +413,29 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
     <script src="js/main.js"></script>
     <script src="js/login.js"></script>
-    <script>
-        $('#datepicker').datepicker({
-            iconsLibrary: 'fontawesome',
-            icons: {
-             rightIcon: '<span class="fa fa-caret-down"></span>'
-         }
-        });
-    </script>
+    <script th:inline="javascript">
+            /*<![CDATA[*/
+            var id =/*[[${trip.id}]]*/; 
+            console.log(id);
+            
+            var socket = new SockJS('/gs-guide-websocket');
+            var receive = 0;
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/' + id, function (greeting) {
+                	if(receive != 0)
+                		alert(JSON.parse(greeting.body).content);
+                	receive += 1;
+                });
+                stompClient.send("/app/" + id, {}, JSON.stringify({'id': id}));
+            });
+            
+            
+            //stompClient.send("/app/hello", {}, JSON.stringify({'id': id}));
+            
+            /*]]>*/
+        </script>
 </body>
 
 </html>
