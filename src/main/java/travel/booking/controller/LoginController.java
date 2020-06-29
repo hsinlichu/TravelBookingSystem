@@ -39,7 +39,7 @@ public class LoginController {
 	 * @param model
 	 * @param redir
 	 * @return
-	 * login from existing accout
+	 * login from existing account
 	 */
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	public String getLogin(@RequestParam String email, @RequestParam String passwd, Model model, RedirectAttributes redir) {
@@ -81,7 +81,7 @@ public class LoginController {
 			@RequestParam String email, @RequestParam String passwd, 
 			Model model, RedirectAttributes redir) {
 		
-		String name = lastname + firstname;
+		String name =  firstname + " " + lastname;
 		
 		Account result = Global.db.addAccount(name, email, passwd);
 		String msg = (result != null) ? "Sign up success, you can login now!" : "Sign up failed, please try again!";

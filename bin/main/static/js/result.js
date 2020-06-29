@@ -22,13 +22,6 @@
                     <span>Start date: %(startDate)s</span></br>
                     <span>End date: %(endDate)s</span></br>
                     <span>Remained sit: %(remainSits)s</span></br>
-
-                    <div class="rating_days d-flex justify-content-between">
-                        <div class="days">
-                            <i class="fa fa-clock-o"></i>
-                            <a href="/trip?id=%(id)s">5 Days</a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

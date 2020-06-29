@@ -55,7 +55,7 @@
                                     <div class="main-menu d-none">
                                         <nav>
                                             <ul id="navigation">
-                                                <h3 th:if="${session.loginInfo.islogin} == True">Welcome <span style="color:#1EC6B6" th:text="${session.loginInfo.account.name}">James Chu</span></h3>
+                                                <h3 th:if="${session.loginInfo.islogin} == True">Welcome <span style="color:#1EC6B6" th:text="${session.loginInfo.account.name}"></span></h3>
                                                 <li><a class="active" href="./index.html">home</a></li>
                                                 <li><a href="/ordermanagement.html">Manage My Order</a></li>
                                                 <li><a href="/signout">Sign Out</a></li>
@@ -67,10 +67,8 @@
                                     <a href="#search_block"> <i class="fa fa-search"></i>
                                     </a>
                                 </div>
-                                <div class="login_icon" data-aos="fade"
-                                                        th:if="${session.loginInfo.islogin} == False">
-                                    <a data-toggle="modal" data-target="#loginModal"> <i
-                                                           class="fa fa-sign-in"></i>
+                                <div class="login_icon" data-aos="fade" th:if="${session.loginInfo.islogin} == False">
+                                    <a data-toggle="modal" data-target="#loginModal"> <i class="fa fa-sign-in"></i>
                                     </a>
                                 </div>
                                 <div class="col-12">
@@ -106,7 +104,7 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="filter_result_wrap">
-                            <h3>Sorting $ Filtering Result</h3>
+                            <h3>Sorting & Filtering Result</h3>
                             <form class="filter_bordered" action="/result" method="get">
                                 <div class="filter_inner">
                                     <div class="row">
